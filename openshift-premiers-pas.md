@@ -57,49 +57,43 @@ Dans l'étape suivante, on créera un premier projet en utilisant la console web
 
 # Etape 2 - Explorer la console web
 
-This section focuses on using the web console.
+Cette section se concentre sur la console web.
 
-Exercise: Logging in with the Web Console
-To begin, click on the Console tab on your screen. This will open the web console on your browser.
-
-You should see a Red Hat OpenShift Container Platform window with Username and Password forms as shown below:
-
-OpenShift Web Console
-
-For this scenario, log in by entering the following:
-
+## Exercise: Se connecter avec la console Web
+Pour commencer, appuyer sur l'onglet Console de l'écran. Cela ouvre la console web dans le navigateur.
+Vous devriez voir une fenêtre de Red Hat OpenShift Container Plateform s'ouvrir qui vous demande Username et Password
+Pour ce scénario, entre les informations suivantes :
+```
 Username: developer
 
 Password: developer
+```
+Après vous être connecté à la console web, vous êtes sur la page des projets.
 
-After logging in to the web console, you'll be on a Projects page.
+## Qu'est ce qu'un projet ? Pourquoi c'est important ?
 
-What is a project? Why does it matter?
-OpenShift is often referred to as a container application platform in that it is a platform designed for the development and deployment of applications in containers.
+OpenShift est souvent vu comme une plateforme d'applications dans des conteneurs dans le sens où la plateforme est conçue pour le développement et le déploiement d'applications dans des conteneurs.
 
-To group your application, we use projects. The reason for having a project to contain your application is to allow for controlled access and quotas for developers or teams.
+Pour regrouper, nous utilons les projets. La raison pour avoir un projet qui contient les applications est de permettre de controller les accès et les quotas pour les développeurs ou équipes.
 
-More technically, it's a visualization of the Kubernetes namespace based on the developer access controls.
+Plus techniquement, c'est une visualisation d'un namespace Kubernetes basé sur le contrôle d'accès pour les développeurs.
 
-Exercise: Creating a Project
-Click the blue Create Project button.
+## Exercise: Créer un Projet
+Cliquer sur le bouton blue Create project
 
-You should now see a page for creating your first project in the web console. Fill in the Name field as myproject.
+Vous devriez voir une page pour créer votre premier projet dans la console web. Remplissez le champ nom avec myproject
 
-Create Project
+Le reste du formulaire est optionnel et à vous de choisir si vous voulez le remplir ou l'ignorez. Cliquuez sur Create pour continuer.
 
-The rest of the form is optional and up to you to fill in or ignore. Click Create to continue.
+Après que votre projet soit créé vous verrez quelques informations basiques sur votre projet.
 
-After your project is created, you will see some basic information about your project.
+## Exercise: Explorer les perpectives Administrator et Developer
+Regarder le menu de navigation situer à gauche. Lors de votre première connexion, vous êtes typiquement sur une perspective Administrator. Si vous n'êtes pas dans la perspective Administrator, cliquer sur le menu pour passer de Dévelopeur à Administrator ou l'inverse.
 
-Exercise: Explore the Administrator and Developer Perspectives
-Notice the navigation menu on the left. When you first log in, you'll typically be in the Administrator Perspective. If you are not in the Administrator Perspective, click the perspective toggle and switch from Developer to Administrator.
+Vous êtes maintenant dans la perspective Administrateur, où vous trouverez Operators, Workloads, Networking, Storage, Builds et menu d'administrations dans la barre de menu.
 
-Perspective Toggle
+Parcourez rapidement les options, en cliquant sur quelques menus vous verrez plus d'options.
 
-You're now in the Administrator Perspective, where you'll find Operators, Workloads, Networking, Storage, Builds, and Administration menus in the navigation.
+Maintenant, passez à la perspective Développeur. Vous passeerez la plupart du temps de cet exercice dans la perspective Développeur. La première chose que vous verrez à la vue par Topologie. Pour l'instant elle est vide, et liste différentes façons d'ajouter du contenu à votre projet. Une fois que votre application est déployée, elle apparaitra dans la vue Topologie
 
-Take a quick look around these, clicking on a few of the menus to see more options.
-
-Now, toggle to the Developer Perspective. We will spend most of our time in this tutorial in the Developer Perspective. The first thing you'll see is the Topology view. Right now it is empty, and lists several different ways to add content to your project. Once you have an application deployed, it will be visualized here in Topology view.
 
