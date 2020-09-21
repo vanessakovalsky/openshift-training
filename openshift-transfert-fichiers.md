@@ -280,83 +280,75 @@ Avant de faire un changement, ouvrir l'URL de l'application web dans un autre on
 http://blog-myproject.2886795294-80-ollie05.environments.katacoda.com/
 ```
 Vous devriez voir la couleur du titre de la bannière en rouge.
-```
-Blog Web Site Red
-```
 Changeons la couleur de la bannière en lançant la commande : 
 ```
 echo "BLOG_BANNER_COLOR = 'blue'" >> blog-django-py/blog/context_processors.py
 ```
-Wait to see that the changed file is uploaded, and then refresh the page for the web site.
+Attendre que le fichier modifié soit envoyé, puis rafraichir la page du site web.
 
-Unfortunately you will see that the title banner is still red. This is because for Python any code changes are cached by the running process and it is necessary to restart the web server application processes.
+Malheureusement le titre de la bannière est toujours rouge. Cela vient du fait que Python met en cache le code lors du lancement du process et il est donc nécessaire de redémarrer le server web de l'application.
 
-For this deployment the WSGI server mod_wsgi-express is being used. To trigger a restart of the web server application processes, run:
+Pour ce déploiement, le serveur WSGI mod_wsgi_express est utilisé. Pour déclencher un redémarrage du serveur d'application, lancer : 
 ```
 oc rsh $POD kill -HUP 1
 ```
-This command will have the affect of sending a HUP signal to process ID 1 running within the container, which is the instance of mod_wsgi-express which is running. This will trigger the required restart and reloading of the application, but without the web server actually exiting.
+Cette commande a pour effet d'envoyer un signal HUP au process avec l'ID 1 qui tourne dans le conteneur, qui est l'instance de mod_wsgi-express qui tourne. Cela déclenche un redemarrage et un rechargement de l'application, mais sans coupure du serveur web.
 
-Refresh the page for the web site once more and the title banner should now be blue.
+Rafraichir la page du site web une fois de plus et le titre de la bannière doit maintenant être bleu.
 
-Blog Web Site Blue
+NB : le nom du pod affiché dans la bannière n'a pas changer, ce qui indique le pod n'a pas redémarrer mais seulement le process du serveur web d'application qui a été redémarré.
 
-Note that the name of the pod as displayed in the title banner is unchanged, indicating that the pod was not restarted and only the web server application processes were restarted.
+Forcer manuellement un rédemarrage du serveur web d'application aurait fait le travail, mais une meilleur façon de faire est que le serveur puisse détécter automatique les modifications de code et déclencher un redémarrage.
 
-Manually forcing a restart of the web server application processes will get the job done, but a better way is if the web server can automatically detect code changes and trigger a restart.
-
-In the case of mod_wsgi-express and how this web application has been configured, this can be enabled by setting an environment variable for the deployment. To set this environment variable run:
-
+Dans le cad u mod_wsgi-express et la manière dont l'application a été configuré, on peut l'activer en définissant une variable d'environnement pour le déploiement. Pour définir la variable d'environnement lancer :
+```
 oc set env dc/blog MOD_WSGI_RELOAD_ON_CHANGES=1
+```
+Cette commande met à jour la configuration du déploiement, eteint le pod existant et le remplace avec un nouvelle instance de notre application avec la variable d'environement qui est passé à l'application.
 
-This command will update the deployment configuration, shutdown the existing pod and replace it with a new instance of our application with the environment variable now being passed through to the application.
-
-Monitor the re-deployment of the application by running:
+Suivre le re-déploiement de l'application en lançant :
 ```
 oc rollout status dc/blog
 ```
+Puisque le pod existant a été éteint, il est nécessaire de ré-enregistrer le nom du nouveau pod.
 Because the existing pod has been shutdown, we will need to capture again the new name for the pod.
 ```
 POD=`pod deploymentconfig=blog`; echo $POD
 ```
-You may also notice that the synchronization process we had running in the background may have stopped. This is because the pod it was connected to had been shutdown.
+Vous avez peut être remarque que le process de syncronisation qui tournait en arrière plan c'est aussi arrêté. Cela vient du fait que le pod ait été arrêté.
 
-You can check this is the case by running:
+Vous pouvez le vérifier avec : 
 ```
 jobs
 ```
-If it is still showing as running, due to shutdown of the pod not yet having been detected, run:
+S'il apparait encore comme en cours, cela vient du fait que l'arret du pod n'a pas encore été détécté, lancer la commande suivante pour l'arrêter : 
 ```
 kill -9 %1
 ```
-to kill it.
-
-Ensure the background task has exited:
+S'assurer que la tache en arrière plan s'est arrêtée : 
 ```
 jobs
 ```
-Now run the oc rsync command again, against the new pod.
+Maintenant lancer de nouveau la commande oc rsync, avec le nouveau pod.
 ```
 oc rsync blog-django-py/. $POD:/opt/app-root/src --no-perms --watch &
 ```
-Refresh the page for the web site again and the title banner should still be blue, but you will notice that the pod name displayed has changed.
+Rafraichir la page du site web, et le titre de la bannière devrait encore être bleu, mais le nom du pod a été modifié.
 
-Modify the code file once more, setting the color to green.
+Modifier de nouveau le fichier de code pour passer la couleur à vert.
 ```
 echo "BLOG_BANNER_COLOR = 'green'" >> blog-django-py/blog/context_processors.py
 ```
-Refresh the web site page again, multiple times if need be, until the title banner shows as green. The change may not be immediate as the file synchronization may take a few moments, as may the detection of the code changes and restart of the web server application process.
-```
-Blog Web Site Green
-```
+Rafraichir de nouveau la page du site web, plusieurs fois si nécessaires, jusqu'à ce que la bannière apparaissent en vert. Le changement peut ne pas être immédiat et prendre quelques instants, le temps que la détection du changement de code et le rédémarrage du process du serveur web d'application se fasse.
 
-Kill the synchronization task by running:
+Arrêter la tache de syncronisation avec : 
 ```
 kill -9 %1
 ```
-Although one can synchronize files from the local computer into a container in this way, whether you can use it as a mechanism for enabling live coding will depend on the programming language being used, and the web application stack being used. This was possible for Python when using mod_wsgi-express, but may not be possible with other WSGI servers for Python, or other programming languages.
+Bien que l'on puisse synchroniser les fichiers depuis le local vers le conteneur de cette façon, le fait d'activer cela comme mécanisme de live codinf dépend du langage de programmation utilisé, et de la stack de l'application web. Cela est possible pour Python lors de ly'utilisation de mod_wsgi-express, mais cela n'est pas possible avec d'autres serveurs WSGI pour Python ou d'autres langage de programmation.
 
-Do note that even for the case of Python, this can only be used where modifying code files. If you need to install additional Python packages, you would need to re-build the application from the original source code. This is because changes to packages required, which for Python is given in the requirements.txt file, isn't going to trigger the installation of that package when using this mechanism.
+NB : Mme dans le cas de Python, cela fonctionne uniquement pour la modification de fichiers de code. Dans le cas où vous devez installer des paquets Python supplémentaire, vous aurez besoin de re-construire l'application depuis le code source original. Cela vient du fait que les paquets nécessaires sont écrit pour Python dans un fichier requirements.txt, qui ne déclenche pas l'installation des paquets en utilisant ce mécanisme.
+
 
 # Etape 5 - Copying Files to a Persistent Volume
 If you are mounting a persistent volume into the container for your application and you need to copy files into it, then oc rsync can be used in the same way as described previously to upload files. All you need to do is supply as the target directory, the path of where the persistent volume is mounted in the container.
