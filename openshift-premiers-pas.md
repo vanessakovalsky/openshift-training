@@ -96,4 +96,32 @@ Parcourez rapidement les options, en cliquant sur quelques menus vous verrez plu
 
 Maintenant, passez à la perspective Développeur. Vous passeerez la plupart du temps de cet exercice dans la perspective Développeur. La première chose que vous verrez à la vue par Topologie. Pour l'instant elle est vide, et liste différentes façons d'ajouter du contenu à votre projet. Une fois que votre application est déployée, elle apparaitra dans la vue Topologie
 
+# Etape 3 - Déployer une image Docker
+Dans cette section, vous allez déployer le composant front end d'une application appelée parksmap. Cette application web affiche une caerte interactive,
+qui sera utilisée pour afficher les localisations de parcs nationaux principaux partout dans le monde.
 
+## Exercise: Déployer votre première image 
+La méthode la plus simple pour déployer une application sur OpenShift est de prendre une image de conteneur existante et de la lancer. Nous allons utiliser la console web d'OpenShift pour cela, assurez vous d'avoir la console web OpenShift ouverte avec la perspective Developper et d'être dans le projet appelé myproject.
+
+La console web d'OpenShift fournit de nombreuses options pour déployer une application dans un projet. Pour cette section, nous allons utiliser la méthode d'Image de Conteneur.
+Comme le projet est vide actuellement, la vue Topologie doit afficher les options suivantes : From Git, Container Image, From Catalog, From Dockerfile, YAML, et Database.
+
+Choisir l'option Container Image
+
+Plus tard, pour revenir à ce menu, vous pouvez cliquer sur +Add dans le menu de gauche.
+
+Sur la page Deploy image entrer lee nom suivant pour l'image depuis un registre externe :
+
+docker.io/openshiftroadshow/parksmap-katacoda:1.2.0
+
+Appuyer sur entrer ou cliquer en dehors de la boite de texte pour valider l'image.
+
+Le champ Application name est rempli avec parksmap-katacoda-app et le champ Nom avec parksmap-katacoda. Ces noms seront ceux utilisés pour votre applications et les composants créé qui se rattache à l'application. Laissez les valeurs générées puisque les étapes suivante utilisent ce nom.
+
+Par défaut, la creation d'un déploiement en utilisant la méthode d'Image de Contneur crée aussi une Route pour notre application. Une Route rend votre application disponible à une URL publique.
+
+Généralement, on laisse cette case coché, car il est très pratique d'avoir une Route crée automatiquement. Dans l'objectif d'apprentissage, décochez cette case. Nous verrons plus tards comment créer une Route nous-mme dans cet exercice. 
+
+Vous êtes prêt à déployer l'image existante de conteneur. Cliquer sur le bouton bleu Create en bas de l'écran. Cela doit vous ramener à la vue Topologie, où vuous aurez une représentation visuelle de l'application que vosu venez juste de déployer. Avec la progression du déploiement de l'image, vous verrez l'anneau de progression de déploiement de parksmap-katacoda passer du bleu clair au bleu.
+
+Ce sont les seuls étapes nécessaire pour déployer un conteneur "vanilla" sur OpenShift. Cela permet à n'importe quel image de conteneur qui suit les bonnes pratiques, comme définir le port des sevices et l'expoiser, dans avoir besion d'utiliser l'utilisateur root ou un autre utilisateur dédié, et qui embarque une commande par défaut pour lancer l'application.
