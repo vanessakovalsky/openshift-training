@@ -1,5 +1,7 @@
 # Ajouter un stockage persistant pour Elastic
 
+Exercice original :  https://www.katacoda.com/courses/openshift/persistence/persistent-elasticsearch
+
 ## Qu'est ce qu'OpenShift COntainer Storage (OCS) ?
 ed Hat® OpenShift® Container Storage is software-defined storage for containers. Engineered as the data and storage services platform for Red Hat OpenShift, Red Hat OpenShift Container Storage helps teams develop and deploy applications quickly and efficiently across clouds.
 
