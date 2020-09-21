@@ -377,63 +377,64 @@ Cela déclenche un nouveau déploiement de notre application bateau, cette fois-
 ```
 oc rollout status dc/dummy
 ```
-To confirm that the persistent volume claim was successful, you can run:
+Pour confirmer que le volume persistantclaim a été créé, vous pouvez lancer :
 ```
 oc get pvc
 ```
-With the dummy application now running, and with the persistent volume mounted, capture the name of the pod for the running application.
+Avec l'application beateau qui tourne, et le volume persistant monté, enregistrer le nom du pod de l'application en cours d'execution.
 ```
 POD=`pod run=dummy`; echo $POD
 ```
-We can now copy any files into the persistent volume, using the /mnt directory where we mounted the persistent volume, as the target directory. In this case since we are doing a one off copy, we can use the tar strategy instead of the rsync strategy.
+Vous pouvez maintenant copier n'importe quel fichier dans le volume persistant, en utilisant le dossier /mnt dans lequel le volume persistant est monté, en tant que dossier cible. Dans ce cas, puisque nous faisons une copie unique , nous pouvons utiliser la strategie du tar au lieu du rsync.
 ```
 oc rsync ./ $POD:/mnt --strategy=tar
 ```
-When complete, you can validate that the files were transferred by listing the contents of the target directory inside of the container.
+Lorsque cela est terminé, vous pouvez validez que les fichiers ont été transférés en listant le contenu du dossier cible à l'intérieur du conteneur.
 ```
 oc rsh $POD ls -las /mnt
 ```
-If you were done with this persistent volume and perhaps needed to repeat the process with another persistent volume and with different data, you can unmount the persistent volume but retain the dummy application.
+Si vous avez terminer avec le volume persistant et que vous avez besoin de répéter le process avec un autre volume persistant et des données différentes, vous pouvez démonter le volume persistant de votre application bateau.
 ```
 oc set volume dc/dummy --remove --name=tmp-mount
 ```
-Monitor the process once again to confirm the re-deployment has completed.
+Pour suivre le process et confirmer de nouveau que le re-déploiement a été complété.
 ```
 oc rollout status dc/dummy
 ```
-Capture the name of the current pod again:
+On enregistre de nouveau le nom du pod courant :
 ```
 POD=`pod run=dummy`; echo $POD
 ```
-and look again at what is in the target directory. It should be empty at this point. This is because the persistent volume is no longer mounted and you are looking at the directory within the local container file system.
+et on vérifier encore ce qui est présent dans le dossier cible. Il devrait être vide à ce point. Cela vient du fait que le volume persistant n'est plus montée et vous vérifier dans le dossier du système de fichier du conteneur.
 ```
 oc rsh $POD ls -las /mnt
 ```
-If you already have an existing persistent volume claim, as we now do, you could mount the existing claimed volume against the dummy application instead. This is different to above where we both claimed a new persistent volume and mounted it to the application at the same time.
+Si vous avez déjà un claim volume persistant, comme nous actuellement, vous pouvez monter un claimed volume sur l'application à la place.
+C'est différent de ce qu'il y a ci-dessus puisque dans les deux cas on a créé un nouveau claim volume persistent et on l'a montée en même temps.
 ```
 oc set volume dc/dummy --add --name=tmp-mount --claim-name=data --mount-path /mnt
 ```
-Look for completion of the re-deployment:
+Vérifiez l'état du re-déploiement :
 ```
 oc rollout status dc/dummy
 ```
-Capture the name of the pod:
+Enregistrer le nom du pod :
 ```
 POD=`pod run=dummy`; echo $POD
 ```
-and check the contents of the target directory. The files we copied to the persistent volume should again be visible.
+et vérifier le contenu du dossier cible. Les fichiers copiés sur le volume persistant sont de nouveau visible.
 ```
 oc rsh $POD ls -las /mnt
 ```
-When done and you want to delete the dummy application, use oc delete to delete it, using a label selector of run=dummy to ensure we only delete the resource objects related to the dummy application.
+Lorsque c'est fait, on veut supprimer l'application bateau, on utilise la commande oc delete pour le faire, avec un sélecteur de label sur run=dummy pour s'assurer que l'on ne supprime que les objets de ressources liés à l'application bateau.
 ```
 oc delete all --selector run=dummy
 ```
-Check that all the resource objects have been deleted.
+Vérifier que toutes les objets de ressources ont été supprimés
 ```
 oc get all --selector run=dummy -o name
 ```
-Although we have deleted the dummy application, the persistent volume claim still exists and can later be mounted against your actual application to which the data belongs.
+Bien que nous ayons supprimer l'application bateau, le claim du volume persistant existe encore et peut être montée plus tard sur une autre appplication qui a besoin des données.
 ```
 oc get pvc
 ```
