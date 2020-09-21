@@ -3,11 +3,11 @@
 Exercice original :  https://www.katacoda.com/courses/openshift/persistence/persistent-elasticsearch
 
 ## Qu'est ce qu'OpenShift COntainer Storage (OCS) ?
-ed Hat® OpenShift® Container Storage is software-defined storage for containers. Engineered as the data and storage services platform for Red Hat OpenShift, Red Hat OpenShift Container Storage helps teams develop and deploy applications quickly and efficiently across clouds.
+Red Hat® OpenShift® Container Storage est un stockage défini par logiciel pour les conteneurs. Conçu pour les données et les plateforme de service de stockage de Red Hat OpenShift, Red Hat OpenShift Container Storage aide les équipes à développer et déployer des applications rapidement et efficacement dans le cloud.
 
 ## Ce que vous allez apprendre
-In this tutorial you will learn how to create Persistent Volumes and use that for deploying Elasticsearch. You will then deploy a demo app which is a e-library search engin for 100 classic novels. Once the app is successfully deployed, you could search any word from 100 classic novels, the search is powered by Elasticsearch which is using persistent storage from OCS. The logical architecture of the app that you will deploy looks like this
-https://github.com/mulbc/learn-katacoda/raw/master/persistence/persistent-elasticsearch/architecture.png
+Dans cet exercice vous apprendrez à créer des Volumes Persistants et à l'utiliser pour déployer Elasticsearch. Vous déployer une application de démo qui est une bibliothère de moteur de recherche parmi 100 romans classiques. Une fois l'applications déployée avec succès, vous pourrez rechercher n'importe quel mot dans les 100 romans classiques, la recherche et motorisée par Elasticsearch qui utilise un stockage persistant depuis OCS. L'architecture logique de l'application que vous allez déployer ressemble à ça : 
+![Schema d'architecture](https://github.com/mulbc/learn-katacoda/raw/master/persistence/persistent-elasticsearch/architecture.png)
 
 # Create Project and PVC
 You have been auto logged in as admin user, verify by running oc whoami on the command line.
