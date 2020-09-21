@@ -28,124 +28,157 @@ Compiler le projet avec les modifications effectuées :
 mvn package
 ```
 
-## Create the recommendation:v2 docker image.
+## Créer l'image docker recommendation:v2.
 
-We will now create a new image using v2. The v2tag during the docker build is significant.
+Nous allons maintenant créer une nouvelle image qui utilise cette v2. Le tag v2 pendant le build de docker est important. 
+Executer la commande : 
+```
+docker build -t example/recommendation:v2 .
+```
+Vous pouvez vérifier que l'image a bien été créée avec la commande : 
+```
+docker images | grep recommendation
+```
 
-Execute docker build -t example/recommendation:v2 .
+## Créer le second déploiement avec sidecar proxy
+Il y a aussin 2nd dfichier deployment.yml dans lequel il faut mettre les bon labels.
+Executer :
+```
+oc apply -f <(istioctl kube-inject -f ../../kubernetes/Deployment-v2.yml) -n tutorial
+```
+Pour voir la création des pods, executer : 
+```
+oc get pods -w
+```
+Une fois que le pod recommendation est prêt (la colonne READY affiche 2/2), vous pouvez appuyer sur  CTRL+C.
 
-You can check the image that was create by typing docker images | grep recommendation
+Tester le endpoint: 
+```
+curl http://customer-tutorial.2886795293-80-cykoria05.environments.katacoda.com
+```
+Vous aimerez voir : "customer => preference => recommendation v2 from '2819441432-5v22s': 1"  puisque par défaut vous avez round-robin load-balancing lorsqu'il y a plus d'un pod derrière un Service.
 
-## Create a second deployment with sidecar proxy
+Vous aimerez voir : "customer => preference => recommendation v1 from '99634814-d2z2t': 3", où '99634814-d2z2t' est le pod qui execute la V1 et le 3 est le nombre de fois où le endpoint a été accédé.
 
-There is also a 2nd deployment.yml file to label things correctly
-
-Execute: oc apply -f <(istioctl kube-inject -f ../../kubernetes/Deployment-v2.yml) -n tutorial
-
-To watch the creation of the pods, execute oc get pods -w
-
-Once that the recommendation pod READY column is 2/2, you can hit CTRL+C.
-
-Test the customer endpoint: curl http://customer-tutorial.2886795293-80-cykoria05.environments.katacoda.com
-
-You likely see "customer => preference => recommendation v2 from '2819441432-5v22s': 1" as by default you get round-robin load-balancing when there is more than one Pod behind a Service.
-
-You likely see "customer => preference => recommendation v1 from '99634814-d2z2t': 3", where '99634814-d2z2t' is the pod running v1 and the 3 is basically the number of times you hit the endpoint.
-
-Send several requests on Terminal 2 to see their responses
-
+Envoyer plusieurs requêtes sur le Terminal 2 pour voir leurs réponses :
+```
 while true; do curl http://customer-tutorial.2886795293-80-cykoria05.environments.katacoda.com; sleep .5; done
+```
+Le comportement par défaut de Kubernetes/Openshift est de load-balancer round-robin sur les différents pods derrière un seul Service. Ajouter un autre replica du déploiement recommendations-v2
 
-The default Kubernetes/OpenShift behavior is to round-robin load-balance across all available pods behind a single Service. Add another replica of recommendations-v2 Deployment.
-
+```
 oc scale --replicas=2 deployment/recommendation-v2
+```
+Attendre quelques secondes que le pod recommendation:v2 devienne disponible et executer :
+```
+oc get pods -w
+```
+Une fois que le pod recommendation est prêt (la colonne READY affiche 2/2), vous pouvez appuyer sur  CTRL+C.
 
-Wait the second recommendation:v2 pod to become available, execute oc get pods -w
+Assurez vous que la commande suivante tourne dans le terminal 2 : 
+```
+while true; do curl http://customer-tutorial.2886795293-80-cykoria05.environments.katacoda.com; sleep .5; done
+```
+Vous verrez deux requêtes pour la v2 pour chaque requête de la v1
 
-Once that the recommendation pod READY column is 2/2, you can hit CTRL+C.
-
-Make sure that the following command is running on Terminal 2 while true; do curl http://customer-tutorial.2886795293-80-cykoria05.environments.katacoda.com; sleep .5; done
-
-You will see two requests for v2 for each one of v1.
-
-Scale back to a single replica of the recommendation-v2 deployment:
-
+Revenir à un seul replica du déploiement recommendation-v2 :
+```
 oc scale --replicas=1 deployment/recommendation-v2
+```
+Dans le Terminal 2, vous verrez les requêtes être balancé round-robin entre la v1 et la v2
 
-On Terminal 2, you will see requests being round-robin balanced between v1 and v2.
+# Tous les utilisateurs sur recommendation:v2
 
-All users to recommendation:v2
-Open the file istiofiles/destination-rule-recommendation-v1-v2.yml.
+Ouvrir le fichier istiofiles/destination-rule-recommendation-v1-v2.yml.
 
-Open the file istiofiles/virtual-service-recommendation-v2.yml.
+Ouvrir le fichier istiofiles/virtual-service-recommendation-v2.yml.
 
-Note that the DestinationRule adds a name to each version of our recommendation deployments, and VirtualService specifies that the destination will be the recommendation deployment with name version-v2.
+Noter que le DestinationRule ajoute un nom à chaque version de notre déploiement recommendation, et que VirtualService spécifique que la destination sera le déploiement recommendation avec le nom version-v2
 
-Let's apply these files.
-
+Appliquons les fichiers
+```
 istioctl create -f ~/projects/istio-tutorial/istiofiles/destination-rule-recommendation-v1-v2.yml -n tutorial
 istioctl create -f ~/projects/istio-tutorial/istiofiles/virtual-service-recommendation-v2.yml -n tutorial
+```
+S'assurer que la commande suivante tourne dans le Terminal 2
+```
+while true; do curl http://customer-tutorial.2886795293-80-cykoria05.environments.katacoda.com; sleep .2; done
+```
+Vous ne devriez voir que la v2 qui est renvoyée.
 
-Make sure that the following command is running on Terminal 2 while true; do curl http://customer-tutorial.2886795293-80-cykoria05.environments.katacoda.com; sleep .2; done
+# Tous les utilisateurs sur recommendation:v1
 
-You should only see v2 being returned.
+Ouvrir le fichier /istiofiles/virtual-service-recommendation-v1.yml.
 
-All users to recommendation:v1
-Open the file /istiofiles/virtual-service-recommendation-v1.yml.
+Noter que comme spécifié la destination sera le déploiement recommendation avec le nom version-v1
 
-Note that it specifies that the destination will be the recommendation deployment with the name version-v1.
-
-Let's replace the VirtualService.
-
+Remplaçons le VirtualService.
+```
 istioctl replace -f ~/projects/istio-tutorial/istiofiles/virtual-service-recommendation-v1.yml -n tutorial
+```
+NB : Nous avons remplacer au lieu de créer puisque nous surchargons le précédent VirtualService
 
-Note: We used replace instead of create since we are overlaying the previous VirtualService.
+S'assurer que la commande suivante tourne dans le Terminal 2
+```
+while true; do curl http://customer-tutorial.2886795293-80-cykoria05.environments.katacoda.com; sleep .2; done
+```
+Vous ne devriez avoir que la V1 qui est renvoyée.
 
-Make sure that the following command is running on Terminal 2 while true; do curl http://customer-tutorial.2886795293-80-cykoria05.environments.katacoda.com; sleep .2; done
+## Explore the VirtualService object
+Vous pouvez vérifier les règles existantes sur les routes avec la commande :
+```
+istioctl get virtualservice
+```
+Cela montrer seuleemtn un objet VirtualService appelé recommendations. Le nom a été spécifié dans les métadonnées du VirtualService
 
-you should only see v1 being returned.
-
-Explore the VirtualService object
-You can check the existing route rules by typing istioctl get virtualservice. It will show that we only have a VirtualService object called recommendations. The name has been specified in the VirtualService metadata.
-
-You can check the contents of this VirtualService by executing istioctl get virtualservice recommendation -o yaml -n tutorial
-
-All users to recommendation v1 and v2
-We can now send requests to both v1 and v2 by simply removing the rule:
-
+Vous pouvez voir le contenu du VirtualService en executant : 
+```
+istioctl get virtualservice recommendation -o yaml -n tutorial
+```
+# Tous les utilisateurs sur recommendation v1 et v2
+Vous pouvez maintenant envoyer les requêtes sur la v1 et la v2 en retirant la règle :
+```
 istioctl delete virtualservice recommendation -n tutorial
+```
+S'assurer que la commande suivante tourne dans le Terminal 2
+```
+while true; do curl http://customer-tutorial.2886795293-80-cykoria05.environments.katacoda.com; sleep .2; done
+```
+Vous devriez avoir le comportement par défaut avec les requêtes balancé round-robin entre la v1 et la v2
 
-Make sure that the following command is running on Terminal 2 while true; do curl http://customer-tutorial.2886795293-80-cykoria05.environments.katacoda.com; sleep .2; done
+# Déploiement Canary : Partager le trafic entre v1 et v2
+Penser au scénario suivant : La V2 est poussé sur le cluster mais le trafic est envoyé lentement pour les utilisateurs finaux, si vous continuer pour voir la réussite, continuer à faire flisser plus de trafic avec le temps
 
-You should be able to see the default behavior of round-robin balancing between v1 and v2 being returned.
+Voyons comment créer un VirtualService qui envoie 90% des requêtes à la v1 et 10% à la v2.
 
-Canary deployment: Split traffic between v1 and v2
-Think about the following scenario: Push v2 into the cluster but slowing send end-user traffic to it, if you continue to see success, continue shifting more traffic over time.
+Ouvrir et lire le fichier /istiofiles/virtual-service-recommendation-v1_and_v2.yml
 
-Let's now how we would create a VirtualService that sends 90% of requests to v1 and 10% to v2.
+Il spécifie que recommendation avec le nom version-v1 a un poid de 90 et recommendation avec le nom version-v2 a un poid de 10.
+Créer le VirtualService :
+```
+istioctl create -f ~/projects/istio-tutorial/istiofiles/virtual-service-recommendation-v1_and_v2.yml -n tutorial
+```
+S'assurer que la commande suivante tourne dans le Terminal 2
+```
+while true; do curl http://customer-tutorial.2886795293-80-cykoria05.environments.katacoda.com; sleep .2; done
+```
+Vous devriez voir un taux de 90/10 entre v1 et v2.
 
-Take a look at the file /istiofiles/virtual-service-recommendation-v1_and_v2.yml
+## Recommendations 75/25
+Changeaons le poid du routing pour 75/25 en appliquant le fichier suivant /istiofiles/virtual-service-recommendation-v1_and_v2_75_25.yml
+Remplacer le VirtualService créé précedemment avec : 
+```
+oc replace -f ~/projects/istio-tutorial/istiofiles/virtual-service-recommendation-v1_and_v2_75_25.yml -n tutorial
+```
+S'assurer que la commande suivante tourne dans le Terminal 2
+```
+while true; do curl http://customer-tutorial.2886795293-80-cykoria05.environments.katacoda.com; sleep .2; done
+```
+Vous devriez voir un taux de 75/25 entre v1 et v2.
 
-It specifies that recommendation with name version-v1 will have a weight of 90, and recommendation with name version-v2 will have a weight of 10.
-
-Create this VirtualService: istioctl create -f ~/projects/istio-tutorial/istiofiles/virtual-service-recommendation-v1_and_v2.yml -n tutorial
-
-Make sure that the following command is running on Terminal 2 while true; do curl http://customer-tutorial.2886795293-80-cykoria05.environments.katacoda.com; sleep .2; done
-
-You should see a rate of 90/10 between v1 and v2.
-
-Recommendations 75/25
-Let's change the routing weight to be 75/25 by applying the following file /istiofiles/virtual-service-recommendation-v1_and_v2_75_25.yml
-
-Replace the previously created VirtualService with: oc replace -f ~/projects/istio-tutorial/istiofiles/virtual-service-recommendation-v1_and_v2_75_25.yml -n tutorial
-
-Make sure that the following command is running on Terminal 2 while true; do curl http://customer-tutorial.2886795293-80-cykoria05.environments.katacoda.com; sleep .2; done
-
-You should see a rate of 75/25 between v1 and v2.
-
-Clean up
-You can remove the VirtualService called recommendation to have the load balacing behavior back:
-
+## Clean up
+Vous pouvez supprimer le VirtualService appelé recommendation pour récupérer le comportement standard du loadbalancing:
+```
 istioctl delete virtualservice recommendation -n tutorial
-
-On Terminal 2 you should see v1 and v2 being returned in a 50/50 round-robin load-balancing.
+```
+Dans le Terminal 2 vous devriez voir v1 et v2 renvoyé des resultats à 50/50
