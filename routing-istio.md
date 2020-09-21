@@ -1,24 +1,32 @@
 # Définir un routing avec Istio
 
-This scenario shows how Istio can be used to control route based on some simple rules.
+Exercice original ici : https://www.katacoda.com/courses/openshift/servicemesh/4-simple-routerules 
 
-Modify Recommendation source code
-IMPORTANT: Do not attempt to edit the files or run any command before the Terminal cursor becomes available.
+Cet exercice montre comment Istio peut être utiliser pour contrôler les routes avec des règles simples.
 
-We can experiment with Istio routing rules by making a change to RecommendationsController.java.
+# Modification do code source de recommandation
+IMPORTANT: Ne pas essayer de modifier des fichiers ou de lancer des commandes avant que le curseur du terminal ne deviennent disponible..
 
-Open /recommendation/java/vertx/src/main/java/com/redhat/developer/demos/recommendation/RecommendationVerticle.java in the editor. Now make the following modification.
+Nous allons tester avec des règles de routing Istio de faire un changement sur RecommendationsController.java.
 
+Ouvrir /recommendation/java/vertx/src/main/java/com/redhat/developer/demos/recommendation/RecommendationVerticle.java dans l'éditor. Faite la modification suviante : 
+```java
     private static final String RESPONSE_STRING_FORMAT = "recommendation v2 from '%s': %d\n";
-Note: The file is saved automatically.
+```
+Note: Le fichier est sauvegardé automatiquement.
 
-Now go to the recommendations folder cd ~/projects/istio-tutorial/recommendation/java/vertx
-
-Make sure that the file has changed: git diff.
-
-Compile the project with the modifications that you did.
-
+Allez maintenant dans le dossier recommendations
+```shell
+cd ~/projects/istio-tutorial/recommendation/java/vertx
+```
+Assurer vous que le fichier a été modifié :
+```
+git diff
+```
+Compiler le projet avec les modifications effectuées :
+```
 mvn package
+```
 
 Create the recommendation:v2 docker image.
 We will now create a new image using v2. The v2tag during the docker build is significant.
