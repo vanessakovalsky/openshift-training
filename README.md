@@ -1,7 +1,7 @@
 # Formation OpenShift - Exercices
 
 
-* [Premières manipulations d'OpenShift] (https://github.com/vanessakovalsky/openshift-training/openshift-premiers-pas.md): https://www.katacoda.com/courses/openshift/introduction/getting-started 
+* [Premières manipulations d'OpenShift](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-premiers-pas.md): 
 * Déployer une application RabitMQ : https://www.katacoda.com/courses/openshift/middleware/amq-getting-started-broker 
 * AJouter du stockage persistant (Elastic) : https://www.katacoda.com/courses/openshift/persistence/persistent-elasticsearch
 https://www.katacoda.com/courses/openshift/persistence/persistent-intro
