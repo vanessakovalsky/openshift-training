@@ -28,14 +28,16 @@ Compiler le projet avec les modifications effectuées :
 mvn package
 ```
 
-Create the recommendation:v2 docker image.
+## Create the recommendation:v2 docker image.
+
 We will now create a new image using v2. The v2tag during the docker build is significant.
 
 Execute docker build -t example/recommendation:v2 .
 
 You can check the image that was create by typing docker images | grep recommendation
 
-Create a second deployment with sidecar proxy
+## Create a second deployment with sidecar proxy
+
 There is also a 2nd deployment.yml file to label things correctly
 
 Execute: oc apply -f <(istioctl kube-inject -f ../../kubernetes/Deployment-v2.yml) -n tutorial
