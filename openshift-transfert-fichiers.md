@@ -350,30 +350,30 @@ Bien que l'on puisse synchroniser les fichiers depuis le local vers le conteneur
 NB : Mme dans le cas de Python, cela fonctionne uniquement pour la modification de fichiers de code. Dans le cas où vous devez installer des paquets Python supplémentaire, vous aurez besoin de re-construire l'application depuis le code source original. Cela vient du fait que les paquets nécessaires sont écrit pour Python dans un fichier requirements.txt, qui ne déclenche pas l'installation des paquets en utilisant ce mécanisme.
 
 
-# Etape 5 - Copying Files to a Persistent Volume
-If you are mounting a persistent volume into the container for your application and you need to copy files into it, then oc rsync can be used in the same way as described previously to upload files. All you need to do is supply as the target directory, the path of where the persistent volume is mounted in the container.
+# Etape 5 - Copier des fichiers vers un Volume Persistant
+Si vous montez un volume persistant dans le conteneur de votre application et que vous avz besoin de copier des fichiers dans ce volume, oc rsync peut être utilisé de la mme façon que décrit précédemment pour l'envoi de fichier. Tout ce que vous avez à faire est de remplacer le dossier cible, par le chemin dans lequel le volume persistant est monté dans le conteneur.
 
-If you haven't as yet deployed your application, but are wanting to prepare in advance a persistent volume with all the data it needs to contain, you can still claim a persistent volume and upload the data to it. In order to do this, you will though need to deploy a dummy application against which the persistent volume can be mounted.
+Si vous n'avez pas encore déployé votre application, mais que vous souhaitez préparer à l'avance le volume perisistant avec toutes les données nécessaire, vous pouvez créer un volume perisistant et transférer les données dans celui-ci. Pour cela, vous devez avoir une application bateau sur laquel votre volume peristant peut être montée.
 
-To create a dummy application for this purpose run the command:
+Pour créer un application bateau pour cet objectif, voici la commande :
 ```
 oc run dummy --image centos/httpd-24-centos7
 ```
-We use the oc run command as it creates just a deployment configuration and managed pod. A service is not created as we don't actually need the application we are running here, an instance of the Apache HTTPD server in this case, to actually be contactable. We are using the Apache HTTPD server purely as a means of keeping the pod running.
+Nous utilisons la commande oc run pour créer une configuration de déploiement et un pod managé. Aucun service n'est crée car nosu n'avons pas besoin que l'application s'execute, une instance du serveru Apache HTTPD dans ce cas, qui pourrait être exposé. Ici, le serveur Apache HTTPd est utilisé seulement pour permettre l'eecution en continue du pod.
 
-To monitor the startup of the pod and ensure it is deployed, run:
+Pour suvire le démarrage du pod, et s'assurer qu'il est déployé, utilisez : 
 ```
 oc rollout status dc/dummy
 ```
-Once it is running, you can see the more limited set of resources created, as compared to what would be created when using oc new-app, by running:
+Une fois que le pod s'execute, vous pouvez voir la list limitée des ressources créés, et la comparer à ce qui aurait été crée en utilisant oc new-app en lançant : 
 ```
 oc get all --selector run=dummy -o name
 ```
-Now that we have a running application, we next need to claim a persistent volume and mount it against our dummy application. When doing this we assign it a claim name of data so we can refer to the claim by a set name later on. We mount the persistent volume at /mnt inside of the container, the traditional directory used in Linux systems for temporarily mounting a volume.
+Maintenant que nous avons une application qui fonctionne, nous avons besoin de créer un volume persistant et de le monter dans notre application bateau. En faisant cela, nous assignerons un nom à notre claim de données afin de pouvoir utiliser ce nom plus tard. Nous montons le volume perisistant dans /mnt à l'intérieur du conteneur, le dossier standard utilisé par les système Linux pour les montages de volumes temporaire.
 ```
 oc set volume dc/dummy --add --name=tmp-mount --claim-name=data --type pvc --claim-size=1G --mount-path /mnt
 ```
-This will cause a new deployment of our dummy application, this time with the persistent volume mounted. Again monitor the progress of the deployment so we know when it is complete, by running:
+Cela déclenche un nouveau déploiement de notre application bateau, cette fois-ci avec le volume persistant montée. Vous pouvez suivre l'avancée du déploiement pour s'avoir s'il est complet, en lançant :
 ```
 oc rollout status dc/dummy
 ```
