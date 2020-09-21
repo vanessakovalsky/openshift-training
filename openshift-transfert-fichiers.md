@@ -16,39 +16,41 @@ Vous pouvez modifier une application dans un conteneur pour développer et teste
 
 # Etape 1 - Crér un projet 
 
-Before we get started, you need to login and create a project in OpenShift to work in.
+Avant de démarrer, vous devez vous connecter et créer un projet pour travailler dedans.
 
-To login to the OpenShift cluster used for this course from the Terminal, run:
+Pour se connecter au cluster OpenShift utilisé dans ce cours, lancer dans le terminal 
 ```
 oc login -u developer -p developer
 ```
-This will log you in using the credentials:
+Vous serez alors identifiés avec les credentials :
 ```
 Username: developer
 Password: developer
 ```
-You should see the output:
+Vous devriez avoir la sortie suivante :
 ```
 Login successful.
 ```
-You don't have any projects. You can try to create a new project, by running
+Vous n'avez pas de projet. Vous pouvez en créer un avec la commande :
 ```
     oc new-project <projectname>
 ```
-To create a new project called myproject run the command:
+Pour créer un nouveau projet appelé myproject, lancer la commande :
 ```
 oc new-project myproject
 ```
-You should see output similar to:
-
+Le retour devrait ressembler à :
+```
 Now using project "myproject" on server "https://openshift:6443".
-
-You can add applications to this project with the 'new-app' command. For example, try:
+```
+Vous pouvez ajouter des applications à ce projets avec la commande new-app. Par exemple, essayer :
 ```
     oc new-app django-psql-example
 ```
-to build a new example application in Python. Or use kubectl to deploy a simple Kubernetes application:
+Pour constuire une nouvelle application en Python. Ou utiliser kubectl pour déployer une application simple Kubernetes.
 ```
     kubectl create deployment hello-node --image=gcr.io/hello-minikube-zero-install/hello-node
 ```
-We are not going to use the web console for this course, but if you want to check anything from the web console, switch to the Console and use the same credentials to login as you used above to login from the command line.
+Nous n'utilisons pas la console web dans ce cours, mais vous pouvez vérifiez ce qu'il se passe dans la console web en cliquand sur l'onglet COnsole et en utilisant les mêmes identifiants que pour la ligne de commande.
+
+
