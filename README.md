@@ -2,7 +2,7 @@
 
 
 * [Premières manipulations d'OpenShift](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-premiers-pas.md): 
-* Transférer des fichiers dans et depuis les conteneurs : https://www.katacoda.com/courses/openshift/introduction/transferring-files 
+* [Transférer des fichiers dans et depuis les conteneurs](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-transfert-fichiers.md) 
 * Utiliser le binding de service pour ajouter une BDD : https://www.katacoda.com/courses/openshift/introduction/service-binding 
 * Définir le routing : https://www.katacoda.com/courses/openshift/servicemesh/4-simple-routerules 
 * Monitorer et tracer ces applications : https://www.katacoda.com/courses/openshift/servicemesh/3-monitoring-tracing
