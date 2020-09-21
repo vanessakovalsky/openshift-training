@@ -1,4 +1,4 @@
-# Ajouter un stockage persistant pour Elastic
+# Ajouter un stockage persistant pour Elasticsearch
 
 Exercice original :  https://www.katacoda.com/courses/openshift/persistence/persistent-elasticsearch
 
@@ -9,30 +9,31 @@ Red Hat® OpenShift® Container Storage est un stockage défini par logiciel pou
 Dans cet exercice vous apprendrez à créer des Volumes Persistants et à l'utiliser pour déployer Elasticsearch. Vous déployer une application de démo qui est une bibliothère de moteur de recherche parmi 100 romans classiques. Une fois l'applications déployée avec succès, vous pourrez rechercher n'importe quel mot dans les 100 romans classiques, la recherche et motorisée par Elasticsearch qui utilise un stockage persistant depuis OCS. L'architecture logique de l'application que vous allez déployer ressemble à ça : 
 ![Schema d'architecture](https://github.com/mulbc/learn-katacoda/raw/master/persistence/persistent-elasticsearch/architecture.png)
 
-# Create Project and PVC
-You have been auto logged in as admin user, verify by running oc whoami on the command line.
-You can click on the above command (and all others in this scenario) to automatically copy it into the terminal and execute it.
+# Créer le projet et le PVC
+Vous êtes connecté en tant qu'utilisateur admin, verifiez le avec la commande whoami.
 
-Create a new project, that we will use throughout this scenario and create a PersistentVolumeClaim on OCS storage class which will be used by Elasticsearch pod to persist data
+Créer un nouveau projet, qui sera utiliser tout le long de l'exercice et créer un PersistenVolumeClaim sur la classe de stockage OCS qui sera utiliser par le pod Elasticsearch pour persister les données.
 ```
 oc create -f 1_create_ns_ocs_pvc.yaml
 
 oc project e-library
 ```
-To verify get the Storage Class (SC) and PersistentVolumeClaim (PVC)
+Pour vérifier la Storage Class (SC) et le PersistentVolumClaim (PVC)
 ```
 oc get pvc
 
 oc get sc
 ```
-With just a few lines of YAML, you have created a PVC named ocs-pv-claim on storage class ocs-storagecluster-ceph-rbd which is provisioned from OpenShift Container Storage. Elasticsearch needs persistence for its data and OpenShift Container Storage is one of the simplest and reliable option that you can choose to persist data for you apps running on OpenShift Container Platform.
-Let's continue to the next section to deploy the Elasticsearch cluster.
+Avec quelques lignes de YAML, vous avez créer un PVC nommé ocs-pv-claom sur une classe de stockage ocs-storagecluster-ceph-rbd qui est fournit par OpenShift Container Storage. Elasticsearch a besoin de persistance pour ces données et OCS est une des options les plus simples et fiable que vous pouvez choisir pour persister les données pour vos applications fonctionnant sur OpenShift Container Platform.
+Continuons avec le déploiement du cluster Elasticsearch
 
-# Deploy Elasticsearch on OCS
-Apply the YAML file to deploy Elasticsearch
+# Deployer Elasticsearch sur OCS
+Appliquer le fichier YAML pour déployer Elasticsearch :
+```
 oc create -f 2_deploy_elasticsearch.yaml
-
-To make Elasticsearch persistent we have defined OCS PVC under volumes section, mounted it under volumeMounts inside the deployment manifest file, as shown below. Doing this, Elasticsearch will then store all of its data on the the PersistentVolumeClaim which resides on OpenShift Container Storage.
+```
+Pour rendre Elasticsearch persistant nous avons définis un PVC OCS dans la section volumes, monter celui ci dans volumeMounts à l'intérieur du fichier manifeste de déploiement comme montrer ci-dessous. De fait, Elasticsearch stockera toutes ses données sur le PVC qui est hébergé sur OCS.
+```
 ...
     spec:
       volumes:
@@ -45,52 +46,52 @@ To make Elasticsearch persistent we have defined OCS PVC under volumes section, 
         volumeMounts:
           - mountPath: "/usr/share/elasticsearch/data"
             name: ocs-pv-storage
-As a developer, this should be the most important stage to enable data persistence for your application. When you request PVC that are provisioned via OCS storage class, the OpenShift Container Storage subsystem make sure your application's data is persistent and reliably stored.
+```
+En tant que développeur, c'est l'étape la plus importante pour activer la persistance des données de l'application. Lorsque vous faite une requête PVC qui est provisionné par une classe de stockage OCS, le sous-système OCS s'assure que les données de votre application soit persistante et fiable.
 
-# Deploy app backend & frontend
-Apply the YAML file to deploy application's backend API
+# Deployer l'application backend & frontend
+Appliquer le fichier YAML pour déployer le backend API de l'application :
+```
 oc create -f 3_deploy_backend_api.yaml
-
-In order for the frontend app to reach the backend API, set BACKEND_URL environment variable as a config map, by executing the following commands
+```
+Pour permettre à l'application frontend d'attendre l'API Backend, définir la variable d'environnement BACKEND_URL en tant que config map, en executant la commande suivante :
+```
 echo "env = {BACKEND_URL: 'http://$(oc get route -n e-library -o=jsonpath="{.items[0]['spec.host']}")'}" > env.js
 
 oc create configmap -n e-library env.js --from-file=env.js
-
-Finally deploy the frontend application
+```
+Enfin, on déploie l'application frontend
+```
 oc create -f 4_deploy_frontend_app.yaml
+```
+A ce point les applications frontend et backend sont déployés et configurés pour utiliser Elasticsearch.
 
-At this point our frontend and backend applications are deployed and are configured to use Elasticsearch
-
-To verify execute the following commands.
+Pour vérifier, executez la commande suivante :
+```
 oc get po,svc,route
+```
+Avant de passer à l'étape suivante, assurez-cous que tous les pods sont à l'état Running. Si ce n'est pas le cas, attendre quelques minutes.
 
-Before you move to next step, please make sure all the pods are in Running state. If they are not, then please allow a few minutes.
-oc get po,svc,route
-
-# Ingest dataset to Elasticsearch
-Let's load the text formatted dataset of 100 classic novels from the Gutenberg's collection into our Elasticsearch service.
-Note : Hang Tight ! The data ingestion could take a few minutes.
-
+# Envoyer des jeux de données à  Elasticsearch
+Charger le jeu de données avec les textes formatés des 100 romans classique de la collection Gutenberg dans le service Elasticsearch.
+Note : Mains en l'air ! L'injection de donnée peut prendre plusieurs minutes.
+```
 oc exec -it e-library-backend-api  -n e-library -- curl -X POST http://localhost:3000/load_data
+```
+Les données injectés sont stockés dans des fragments Elasticsearch qui utilisent à leur tour le PVC OCS pour la persistance.
 
-Here the ingested data is getting stored on Elasticsearch shards which are in-turn using OCS PVC for persistence.
+Dès que les données sont injectées, Elasticsearch indexera et les rendra recherchable.
 
-As soon as the data is ingested, Elasticsearch will index that and make it search-able.
-
-Grab the frontend URL and open that in your web-browser to search for any random words.
-
+Récupérer l'URL du frontend et ouvrez là dans un navigateur pour rechercher n'importe quel mot.
 URL http://frontend-e-library.2886795278-80-simba07.environments.katacoda.com
+```
 oc get route frontend -n e-library
+```
+Les capacités de recherches en temps réél d'Elasticsearch, permette de cherche instatannément dans un large jeu de données.
+Ce qui en fait un choix populaire pour les logs, les metriques, la recherche full-texte...
 
-Elasticsearch real-time search capabilities, instantly searches a large dataset. 
-Thus making it a popular choice for logging,metrics,full-text search, etc. use cases.
+## Pour aller plus loin 
+Elasticsearch offre de la réplication au niveau des indexes pour founir de la résilience sur les données.
+La résilience de données supplémentaire peut être fournit en déployant Elasticsearch par dessus une couche de service de stockage fiable comme OCS qui offre d'importantes capacités de résilience. Cette resilience de données supplémentaires peut améliorer la disponibilité du service ElasticSearch pendant les scénarios d'erreurs important de l'infrastructure. A cause des ressources limitées de cet environnement de test, nous ne pouvons vous montrer les capacités de résiliences d'Elasticsearch lorsqu'il est déployé sur OCS, mais vous avez une bonne idée.
 
-## Final Thoughts
 
-Elasticsearch offers replication at per index level to provide some data resilience. 
-Additional data resilience can be provided by deploying Elasticsearch on top of a reliable storage service layer such as OpenShift Container Storage 
-which offers further resilience capabilities. This additional data resilience can enhance Elasticsearch service availability during broader 
-infrastructure failure scenarios. Because of limited system resources available in this lab environment, we could not demonstrate the enhanced 
-resiliency capabilities of Elasticsearch when deployed on OpenShift Container Storage, but you have got the idea :)
-
-Happy Persistency \o
