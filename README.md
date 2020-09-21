@@ -5,8 +5,7 @@
 * [Transférer des fichiers dans et depuis les conteneurs](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-transfert-fichiers.md) 
 * [Définir le routing](https//github.com/vanessakovalsky/openshift-training/blob/master/routing-istio.md) 
 * [Monitorer et tracer ces applications](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-monitoring.md)
-* AJouter du stockage persistant (Elastic) : https://www.katacoda.com/courses/openshift/persistence/persistent-elasticsearch
-https://www.katacoda.com/courses/openshift/persistence/persistent-intro
+* [Ajouter du stockage persistant (Elastic)](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-persistent-storage.md) 
 * Utiliser le registre de conteneurs : https://www.katacoda.com/courses/openshift/subsystems/container-internals-lab-2-0-part-3
 * Déployer un service RabitMQ : https://www.katacoda.com/courses/openshift/middleware/amq-getting-started-broker 
 * Déployer une application avec S2i depuis les sources : https://www.katacoda.com/courses/openshift/introduction/deploying-python
