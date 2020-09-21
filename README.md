@@ -6,7 +6,6 @@
 * Utiliser le binding de service pour ajouter une BDD : https://www.katacoda.com/courses/openshift/introduction/service-binding 
 * Définir le routing : https://www.katacoda.com/courses/openshift/servicemesh/4-simple-routerules 
 * Monitorer et tracer ces applications : https://www.katacoda.com/courses/openshift/servicemesh/3-monitoring-tracing
-* Déployer une application complète en micro service : https://www.katacoda.com/courses/openshift/introduction/training-workshop 
 * AJouter du stockage persistant (Elastic) : https://www.katacoda.com/courses/openshift/persistence/persistent-elasticsearch
 https://www.katacoda.com/courses/openshift/persistence/persistent-intro
 * Utiliser le registre de conteneurs : https://www.katacoda.com/courses/openshift/subsystems/container-internals-lab-2-0-part-3
@@ -16,6 +15,7 @@ https://www.katacoda.com/courses/openshift/persistence/persistent-intro
 
 
 Pour aller plus loin :
+* Déployer une application complète en micro service : https://www.katacoda.com/courses/openshift/introduction/training-workshop 
 * Utiliser Egress pour définir les services : https://www.katacoda.com/courses/openshift/servicemesh/8-egress 
 * Service mesh pour découvrir les services : https://www.katacoda.com/courses/openshift/servicemesh/1-introduction
 * Utiliser Ansible pour provisionner : https://www.katacoda.com/courses/openshift/introduction/deploying-images 
