@@ -2,70 +2,66 @@
 
 Exercice original : https://www.katacoda.com/courses/openshift/servicemesh/3-monitoring-tracing 
 
-Cet exercice montre comment obtenir le monitoring par défaut avec Prometheus et Graphana.
+Cet exercice montre comment obtenir le monitoring par défaut avec Prometheus et Grafana.
 
 # Monitoring
-For monitoring, Istio offers out of the box monitoring via Prometheus and Grafana.
-
-Note: Before we take a look at Grafana, we need to send some requests to our application using on Terminal 2: 
+Pour monitorier, Istio offre nativement le monitoring via Prometheus et Grafana
+ 
+Note: Avant de regarder Grafana, nous avons besoin d'envoyer quelques requêtes à notre application en utilisant le Terminal 2: 
 ```
 while true; do curl http://customer-tutorial.2886795283-80-kitek03.environments.katacoda.com; sleep .2; done
 ```
-Check the grafana route by typing 
+Vérifier la route de grafana en tapant :
 ```
 oc get route -n istio-system
 ```
-Now that you know the URL of Grafana, access it at http://grafana-istio-system.2886795283-80-kitek03.environments.katacoda.com/d/1/istio-dashboard?refresh=5s&orgId=1
+Maintenant que vous connaisez l'URL de Grafana, ouvrez là : http://grafana-istio-system.2886795283-80-kitek03.environments.katacoda.com/d/1/istio-dashboard?refresh=5s&orgId=1
 
-You can also check the workload of the services at http://grafana-istio-system.2886795283-80-kitek03.environments.katacoda.com/d/UbsSZTDik/istio-workload-dashboard?refresh=5s&orgId=1 
+Vous pouvez aussi vérifier la charge des services à l'adresse : http://grafana-istio-system.2886795283-80-kitek03.environments.katacoda.com/d/UbsSZTDik/istio-workload-dashboard?refresh=5s&orgId=1 
 
 
 # Custom Metric
-Istio also allows you to specify custom metrics which can be seen inside of the Prometheus dashboard.
+Istio permet aussi de spécifier des métriques personnalisés qui peuvent être incluses dans les dashboard Prometheus.
 
-Look at the file /istiofiles/recommendation_requestcount.yml
-
-It specifies an istio rule that invokes the recommendationrequestcounthandler for every invocation to recommendation.tutorial.svc.cluster.local
-
-Let's go back to the istio installation folder:
+Ouvrir le fichier /istiofiles/recommendation_requestcount.yml
+Il spécifie une règle istio qui invoque recommendationrequestcounthandlerpour chaque appel à recommendation.tutorial.svc.cluster.local
+Revenons au dossier d'installation de istio :
 ```
 cd ~/projects/istio-tutorial/
 ```
-Now, add the custom metric and rule.
-
-Execute 
+Ajoutons une métrique personnalisé et une règle :
 ```
 istioctl create -f istiofiles/recommendation_requestcount.yml -n istio-system
 ```
-Make sure that the following command is running on Terminal 2 
+S'assurer que la commande suivante tourne toujours dans le Terminal 2 :
 ```
 while true; do curl http://customer-tutorial.2886795283-80-kitek03.environments.katacoda.com; sleep .2; done
 ```
-Check the prometheus route by typing 
+Vérifier la route de prometheus en tapant :
 ```
 oc get routes -n istio-system
 ```
-Now that you know the URL of Prometheus, access it at http://prometheus-istio-system.2886795283-80-kitek03.environments.katacoda.com/graph?g0.range_input=1m&g0.stacked=1&g0.expr=&g0.tab=0
+Maintenant que vous connaisez l'URL de Prometheus, ouvrez là http://prometheus-istio-system.2886795283-80-kitek03.environments.katacoda.com/graph?g0.range_input=1m&g0.stacked=1&g0.expr=&g0.tab=0
 
-Add the following metric:
+Ajouter la métrique suivante :
 ```
 istio_requests_total{destination_service="recommendation.tutorial.svc.cluster.local"}
 ```
-and select Execute:
+Et cliquer sur Execute.
 
-Note: You may have to refresh the browser for the Prometheus graph to update. And you may wish to make the interval 5m (5 minutes) as seen in the screenshot above.
+Note: Vous pouvez avoir besoin de rafraichir le navigateur pour que le graphique de Prometheus se mette à jour. Et vous pouvez souhaitez que l'interval soit de 5 minutes
 
-#T racing
-Distributed Tracing involves propagating the tracing context from service to service, usually done by sending certain incoming HTTP headers downstream to outbound requests. For services embedding a OpenTracing framework instrumentations such as opentracing-spring-cloud, this might be transparent. For services that are not embedding OpenTracing libraries, this context propagation needs to be done manually.
+# Tracing
+Le tracage distribué implique la propagation du contexte de tracage de service en service, cela est généralement fait avec les headers HTTP des requêtes entrantes. Pour les services qui embarque les instruments du framework OpenTracing comme Opentracing-spring-cloud, cela est transparent. Pour les services qui n'embarque pas de bibliothèques OpenTracing, ce contexte de propagation doit être défini manuellement.
 
-As OpenTracing is "just" an instrumentation library, a concrete tracer is required in order to actually capture the tracing data and report it to a remote server. Our customer and preference services ship with Jaeger as the concrete tracer. the Istio platform automatically sends collected tracing data to Jaeger, so that we are able to see a trace involving all three services, even if our recommendation service is not aware of OpenTracing or Jaeger at all.
+Comme OpenTracing est "juste" une bibliothèque d'instrument, un traceur concret est requis pour reellement enregistrer les données de tracage et les envoyer à un serveur distant. Notre client et services de préférences utilise Jaeger comme traceur concret. La plateforme Istio envoit automatiquement les données de tracage collecté à Jaeger, de sorte que nous voyons un trace impliquant les trois services, même si le service recommendation ne connait pas du tout OpenTracing ou Jaeger.
 
-Our customer and preference services are using the TracerResolver facility from OpenTracing, so that the concrete tracer can be loaded automatically without our code having a hard dependency on Jaeger. Given that the Jaeger tracer can be configured via environment variables, we don’t need to do anything in order to get a properly configured Jaeger tracer ready and registered with OpenTracing. That said, there are cases where it’s appropriate to manually configure a tracer. Refer to the Jaeger documentation for more information on how to do that.
+Notre client et service de préférence utilisent l'utilitaire TracerResolver d'OpenTracing, de sorte que les traceurs concrêts soit automatiquement chargé sans que le code n'est une dépendance forte à Jaeger. Etant donné que le traceur Jaeger peut tre configuré via des variables d'environnement, nous n'avons rien à fiare pour obtenir des traceurs Jaeger prêt et enregistrés avec OpenTracing. Certains cas nécessitent une configuration manuelle du traceur. Voir la documentation de Jaeger pour plus d'informations sur comment le faire.
 
-Check the Jaeger route by typing 
+Vérifier la route de Jaeger en tapant :
 ```
 oc get routes -n istio-system
 ```
-Now that you know the URL of Jaeger, access it at http://tracing-istio-system.2886795283-80-kitek03.environments.katacoda.com
+Maintenant que vous connaisez l'URL de Jaeger, ouvrez là http://tracing-istio-system.2886795283-80-kitek03.environments.katacoda.com
 
-Select customer from the list of services and click on Find Traces:
+Sélectionner un client de la liste de service et cliquer sur Find Traces.
