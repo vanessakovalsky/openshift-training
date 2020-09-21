@@ -3,8 +3,8 @@
 
 * [Premières manipulations d'OpenShift](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-premiers-pas.md): 
 * [Transférer des fichiers dans et depuis les conteneurs](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-transfert-fichiers.md) 
-* [Définir le routing](https//github.com/vanessakovalsky/openshift-training/blob/master/routing-istio.md) : https://www.katacoda.com/courses/openshift/servicemesh/4-simple-routerules 
-* Monitorer et tracer ces applications : https://www.katacoda.com/courses/openshift/servicemesh/3-monitoring-tracing
+* [Définir le routing](https//github.com/vanessakovalsky/openshift-training/blob/master/routing-istio.md) 
+* [Monitorer et tracer ces applications](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-monitoring.md)
 * AJouter du stockage persistant (Elastic) : https://www.katacoda.com/courses/openshift/persistence/persistent-elasticsearch
 https://www.katacoda.com/courses/openshift/persistence/persistent-intro
 * Utiliser le registre de conteneurs : https://www.katacoda.com/courses/openshift/subsystems/container-internals-lab-2-0-part-3
