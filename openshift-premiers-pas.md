@@ -177,61 +177,46 @@ Une fois que vous avez cliquer l'icon de la Route, vous devriez voir l'applicati
 
 ## Etape 6 - Construire à partir du code source
 
-In this section, you are going to deploy a backend service for the ParksMap application. This backend service will provide data, via a REST service API, on major national parks from all over the world. The ParksMap front end web application wi
+Dans cette partie, vous allez déployer le service backend pour l'application Parksmap. Ce service fournit des données via une API REST, sur les principaux parcs nationaux partout dans le monde. Le frontend de l'application ParksMap récupère des données et les affiches sur une crate intractive dans un navigateur web.
 
-Background: Source-to-Image (S2I)
-In a previous section, you learned how to deploy an application (the ParksMap front end) from a pre-existing container image. Here you will learn how to deploy an application direct from source code hosted in a remote Git repository. This will be done using the Source-to-Image (S2I) tool.
+## Background: Source-to-Image (S2I)
+Dans la section précédente, vous avez appris à déployer une application (le front end de ParksMap) depuis une image de conteneur pré-existante. Ici vous allez apprendre à déployer une application directement depuis le code source hebergé dans un depôt distant Git. Cela est fait avec l'outil Source-To-Image (S2I). 
 
-The documentation for S2I describes itself in the following way:
+La documentation de S2I le décrit de la manière suivante :
 
-Source-to-image (S2I) is a tool for building reproducible container images. S2I produces ready-to-run images by injecting source code into a container image and assembling a new container image which incorporates the builder image and built source. The result is then ready to use with docker run. S2I supports incremental builds which re-use previously downloaded dependencies, previously built artifacts, etc.
+Source-to-image (S2I) est un outil pour construire des images de conteneurs reproductibles. S2I produit des images prêtes à l'emploi en injectant le code source à l'intérieur d'une image de conteneur et en assemblant une nouvelle image de conteneur qui intègre l'image constuite et les sources. Le resultat est prêt à tre utiliser avec Docker. S2I supporte les constructions incrémentales qui réutilisent les dépendances déjà téléchargés, les artefacts déjà buildés, etc. 
 
-OpenShift is S2I-enabled and can use S2I as one of its build mechanisms (in addition to building container images from Dockerfiles and "custom" builds).
+OpenShift rend disponible S2I comme l'un de ces mécanismes de construction (en plus de la construction d'image de conteneurs depuis des DOckerFiles ou des builds "custom").
 
-A full discussion of S2I is beyond the scope of this tutorial. More information about S2I can be found in the OpenShift S2I documentation and the GitHub project respository for S2I.
+Une explication complète de S2I est en dehors de l'objectif de cet exercice. Plus d'informations peuvent tre trouvé dans la documentation d'OpenSHift sur S2I et sur le déoôt Github de S2I.
 
-The only key concept you need to remember about S2I is that it handles the process of building your application container image for you from your source code.
+Le seul concept clé que vous devez retenir à propos de S2I est qu'il gère le process de construction des images de conteneur de votre application à partir de votre code source.
 
-Exercise: Deploying the application code
-The backend service that you will be deploying in this section is called nationalparks-katacoda. This is a Python application that will return map coordinates of major national parks from all over the world as JSON via a REST service API. The source code repository for the application can be found on GitHub at:
 
-https://github.com/openshift-roadshow/nationalparks-katacoda
-To deploy the application you are going to use the +Add option in the left navigation menu of the Developer Perspective, so ensure you have the OpenShift web console open and that you are in the project called myproject. Click +Add. This time, rather than using Container Image, choose From Catalog, which will take you to the following page:
-
-Browse Catalog
-
-If you don't see any items, then uncheck the Operator Backed checkbox. Under the Languages section, select Python in the list of supported languages. When presented with the options of Django + Postgres SQL, Django + Postgres SQL (Ephemeral), and Python, select the Python option and click on Create Application.
-
-Python Builder
-
-For the Git Repo URL use:
+## Exercise: Déployer le code de l'applciation
+Le service backend que vous allez déployer dans cette partie est appelé nationalparks-katacoda. C'est une application en Python qui renvoir les coordonnées de cartes des principaux parcs nationaux du monde au format JSO via une API REST. Le code source de cette application est disponible sur Github 
 
 https://github.com/openshift-roadshow/nationalparks-katacoda
 
-Create Python
+Pour déployer l'application, utiliser l'option +ADD dans le menu de gauche de la perspective Deloppeur, donc assurez vous d'avoir la console web OpenShift ouverte et d'être dans le projet appelé myproject. Cliquer sur le +ADD. Cette fois au lieu de choisir Container Image, choisir From Catalogue.
 
-Once you've entered that, click outside of the text entry field, and then you should see the Name of the application show up as nationalparks-katacoda. The Name needs to be nationalparks-katacoda as the front end for the ParksMap application is expecting the backend service to use that name.
+SI vous ne voyee aucune option, décocher la case Operator Backed. Dans la section Languages, choisir Python dans la liste des langages supportés. Puis lorsque les options Django + Postgres SQL, Django + Postgres SQL (Ephemeral), et Python, choisir l'option Python et cliquer sur Create Application.
 
-Leave all other options as-is.
+Pour l'adresse du dépôt Git utiliser : 
 
-Click on Create at the bottom right corner of the screen and you will return to the Topology view. Click on the circle for the nationalparks-katacoda application and then the Resources tab in the side panel. In the Builds section, you should see your build running.
+https://github.com/openshift-roadshow/nationalparks-katacoda
 
-Build Running
+Une fois que vous avez entrer cela, cliquer en dehors du champ text, et sélectionner le nom de l'application qui apparait comme nationalparks-katacoda.Le nom doit être nationalparks-katacoda puisque c'est le nom attendu par l'application Front End ParksMap. 
+Laissez les autres options par défaut.
+Cliquer sur Create en bas à droite de l'écran et vous revenez à la vue Topologie. Cliquer sur le cercle de l'application nationalparks-katacoda puis que l'onglet Resources dans le panneau. Dans la section Builds, vous devriez voir votre build en cours.
 
-This is the step where S2I is run on the application source code from the Git repository to create the image which will then be run. Click on the View Logs link for the build and you can follow along as the S2I builder for Python downloads all the Python packages required to run the application, prepares the application, and creates the image.
+C'est à cette étape où S2I construit l'application à partir du code source du depôt Git pour créer l'image qu'elle lancera. Cliquer sur View Logs pour le build et vous pourrez suivre le constructeur S2I depuis le téléchargement de Python et des paquets nécessaires pour l'applications, puis la préparation de l'application et la création de l'image.
 
-Build Logs
+Revenir à la vue TOpologie, lorsque le build est terminé pour voir l'image qui se déploit et l'application qui démarre. Le build est complété lorsque vous voyez dans les logs : Push successful.
 
-Head back to Topology view when the build completes to see the image being deployed and the application being started up. The build is complete when you see the following in the build logs: Push successful.
+La coche verte en bas à gauche dans la visualisation du composant nationalparks-katacoda indique que le build est complet. Une fois que l'anneau passe du bleu clair au bleu, le service backend nationalparks-katacoda est déployé.
 
-Build Complete
+Retourner sur l'application front end ParksMap dans le navigateur et vous devriez pouvoir voir les localisation des parcs nationaux apparaitre. Si vous n'avez pas l'application ouverte dans votre navigateur, revvenir à la vue Topologie, et cliquer sur l'icone en haut à droit du cercle de parksmpa-katacoda pour ouvrir l'URL dans votre navigateur.
 
-The green check mark in the bottom left of the nationalparks-katacoda component visualization indicates that the build has completed. Once the ring turns from light blue to blue, the backend nationalparks-katacoda service is deployed.
+Féliciations! Vous avez fini d'apprendre les bases du démarrage sur Openshift Container Platform.
 
-Now, return to the ParksMap front end application in your browser, and you should now be able to see the locations of the national parks displayed. If you don't still have the application open in your browser, go to Topology view and click the icon at the top right of the circle for the parksmap-katacoda application to open the URL in your browser.
-
-ParksMap Front End
-
-Congratulations! You just finished learning the basics of how to get started with the OpenShift Container Platform.
-
-Now that you've completed this tutorial, click Continue for more resources and tools to help you learn more about OpenShift.
