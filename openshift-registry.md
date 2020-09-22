@@ -1,5 +1,7 @@
 # Utiliser le registre de conteneurs OpenShift
 
+exercice original : https://www.katacoda.com/courses/openshift/subsystems/container-internals-lab-2-0-part-3
+
 This lab is focused on understanding what container registries are for and how they work.
 
 By the end of this lab you should be able to:
