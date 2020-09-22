@@ -105,88 +105,70 @@ Accéder à votre application via la route 'console-messaging.2886795275-80-kite
 Lancer 'oc status' pour voir votre app.
 Lorsque le provisionnement du broker est terminé, vous pourrez commencer à utiliser le service.
 
-# Creating a Simple Messaging Application
-The sample project in the upper right part side of the screen, shows the components of your sample Node.js project. This project uses Red Hat 
-OpenShift Application Runtimes, a set of open source cloud native application runtimes for modern applications.
+# Créer une application de message simple
+Le projet exemple est la partie droite de l'ecran, qui montre les composants du projet exemple en Node.js. Ce projet utilises Red Hat OpenShift Application Runtimes, un ensemble d'environnement cloud natif open source pour les applications modernes.
 
-The app implements a simple messaging greeting service that simply sends a Hello World! to a queue and the same application listens in the same 
-queue for greeting messages. We use the Red Hat AMQ JavaScript Client to create a connection to the messaging broker to send and receive messages.
+L'application implémente un e messagerie simple avec un service qui envoie simplement un Hello World à une queue et la mme application écoute la même queue pour afficher les messages. Nous utilisons le Client Javascript de Red Hat AMQ pour créer une connection au broker de message pour envoyer et recevoir les messages. 
 
-The AMQ Clients is a suite of AMQP 1.0 messaging APIs that allow you to make any application a messaging application. It includes both 
-industry-standard APIs such as JMS and new event-driven APIs that make it easy to integrate messaging anywhere. The AMQ Javascript Client is 
-based on the AMQP Rhea Project.
+Le client AMQ est une suite d'aPI de message de AMQP 1.0 qui vous permet de transformer n'importe quel application en application de messagerie. Il inclut à la fois les API standard de l'industrie mais aussi JMS et des nouvelles API pilotées par les évènements qui rendre facile l'intégration des message à n'importe quoi. Le client JavaScript AMQ est basé sur le projet AMQP Rhea. 
 
-## Inspect the application code
-Click the links below to open each file and inspect its contents:
+## Découvrir le code de l'application :
+Les fichiers de l'application sont : 
+* package.json - Métadonnées à propos du projet : nom, version, dépendances et autres informations nécessaire pour construire et maintenir le projet
+* app.js - Logique principale de l'application exemple
 
-* package.json - Metadata about the project: name, version, dependencies, and other information needed to build and maintain the project.
-* app.js - Main logic of the sample application.
-## Install Dependencies
-Switch to the application directory in the command line by issuing the following command:
+## Installer les dépendances
+Se déplacer dans le dossier de l'application avec la commande :
 ```
 cd /root/projects/amq-examples/amq-js-demo
 ```
-Dependencies are listed in the package.json file and declare which external projects this sample app requires. To download and install them, 
-run the following command:
+Les dépendances sont listées dans le fichier package.json et déclare quel projets externes l'application exemple nécessite. Pour les télécharger et les installer, lancez la commande suivante :
 ```
 npm install
 ```
-It will take a few seconds to download, and you should see a final report such as
+Cela prend quelques secondes à télécharger et vous devriez avoir un rapport final ressemblant à :
 ```
 added 140 packages in 2.937s
 ```
 
-## Deploy
-Build and deploy the project using the following command:
+## Déployer
+Construire et lancer le projet en utilisant la commande suivante :
 ```
 npm run openshift
 ```
-This uses NPM and the Nodeshift project to build and deploy the sample application to OpenShift using the containerized Node.js runtime.
+Cela utilise NPM et le projet NodeShit pour construire et déployer l'application exemple dans OpenShift en utilisant un environnement conteneurisée Node.js
 
-The build and deploy may take a minute or two. Wait for it to complete.
+La construction et le déploiement peuvent prendre une à deux minutes. Attendre que cela soit terminé.
 
-You should see INFO complete at the end of the build output, and you should not see any obvious errors or failures. In the next step you will 
-explore OpenShift's web console to check your application is running.
+Vous devriez voir INFO complete à la fin de la sortie du build, et vous ne devriez pas voir d'erreurs ou d'echecs.
 
-# Access the application running on OpenShift
+
+# Accéder à l'application qui tourne sur OpenShift
 After the previous step build finishes, it will take less than a minute for the application to become available.
 
 OpenShift ships with a web-based console that will allow users to perform various tasks via a browser.
 
 ## Open the OpenShift Web Console
-To get a feel for how the web console works, click on the "OpenShift Console" tab.
-
-OpenShift Console Tab
-
-The first screen you will see is the authentication screen. Enter your username and password and then log in.
-
-Your credentials are:
+Pour voir comment la console fonctionne, cliquer sur l'onglet "OpenShift Console"
+Le premier écran vous affiche un écran de connexion. Entre le nom d'utilisateur et le mot de passe puis cliquer sur Log in
+Les informations de connexions sont :
 ```
 Username: developer
 Password: developer
 ```
-Web Console Login
 
-After you have authenticated to the web console, you will be presented with a list of projects that your user has permission to work with.
+Après vous être connecté à la console web, vous aurez une liste de projets sur lesquels votre utilisateur à le droit de travailler.
 
-Click on your the messaging project name to be taken to the project overview page.
+Cliquer sur le nom de projet messaging pour arriver sur la page de présentation du projet.
 
-Messaging Project
+Vous verrez alors le broker de message et votre nouvelle application en cours de fonctionnement. Cliquer sur la ligne amq-js-demo pour ouvrir le panneau.
 
-You will see the messaging broker and your brand new application running. Click in the amq-js-demo row to expand the panel.
+Cliquer sur un pod à l'intérieur du cercle blue pour accéder au pod qui exécute votre application.
 
-AMQ Javascript Demo
+Cliquer sur l'onglet logs pour accéders aux logs du conteneur de l'application.
 
-Click in the 1 pod inside the blue circle to access the actual pod running your application.
-
-Application Pod
-
-Click in the logs tab to access the application container logs.
-
-Log
-
-You will see a message every 10 seconds with the following text:
+Vous verrez un message toutes les 10 secondes avec le texte suivant :
 ```
 Message received: Hello World!
 ```
-This message is been sent and received to the example queue by the application you just deployed.
+Ce message est envoyé et reçu depuis la queue d'exemple de l'application que vous venez de déployer.
