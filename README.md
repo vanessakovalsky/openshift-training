@@ -3,7 +3,7 @@
 
 * [Premières manipulations d'OpenShift](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-premiers-pas.md): 
 * [Transférer des fichiers dans et depuis les conteneurs](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-transfert-fichiers.md) 
-* [Définir le routing](https//github.com/vanessakovalsky/openshift-training/blob/master/routing-istio.md) 
+* [Définir le routing](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-routing-istio.md) 
 * [Monitorer et tracer ces applications](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-monitoring.md)
 * [Ajouter du stockage persistant (Elastic)](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-persistent-storage.md) 
 * [Déployer un service RabitMQ](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-add-service.md) 
