@@ -2,23 +2,22 @@
 
 Exercice original : https://www.katacoda.com/courses/openshift/middleware/amq-getting-started-broker
 
-Overview
-AMQ provides fast, lightweight, and secure messaging for Internet-scale applications. AMQ components use industry-standard message protocols 
-and support a wide range of programming languages and operating environments. AMQ gives you the strong foundation you need to build modern 
-distributed applications.
+## Aperçu
+AMQ fournit une messagerie rapide, légère et sécuriser pour les applications internet. Les composants AMQ utilise les protocoles de messagerie standard de l'industrie et supporte une large palette de langage de programmation et d'environnement d'opération. AMQ donne une fondation forte nécessaire pour construire des applications distribuées modernes.
 
-What is AMQ Broker?
-AMQ Broker is a pure-Java multiprotocol message broker. It’s built on an efficient, asynchronous core, with a fast native journal for message 
-persistence and the option of shared-nothing state replication for high availability.
 
-Persistence - A fast, native-IO journal or a JDBC-based store
-High availability - Shared store or shared-nothing state replication
-Advanced queueing - Last value queues, message groups, topic hierarchies, and large message support
-Multiprotocol - AMQP 1.0, MQTT, STOMP, OpenWire, and HornetQ Core
-AMQ Broker is based on the Apache ActiveMQ Artemis project.
+## Qu'est que AMQ Broker ?
+AMQ Broker est un broker de message multiprotocole en pur Java. Il est construit sur un coeur efficace et asynchrone avec un journal natif et rapide pour la persistance des message et l'option de réplication de l'état pour la haute disponibilité.
 
-What will you learn
-In this tutorial you will learn how to setup a Red Hat AMQ message broker instance running on OpenShift.
+* Persistance - Un journal rapide et natif sur les IO ou un stockage basé sur JDBC
+* Haute disponibilité - Store partagé ou réplication de l'état
+* Système de queue avancée - Queues basées sur les dernières vlaures, une hiérarchie des sujet et le support de large message
+* Multiprotocole - AMQP 1.0, MQTT, STOMP, OpenWire, et HornetQ Core
+
+AMQ Broker est basé sur le projet Apache ActiveMQ Artemis.
+
+## Objectif 
+Dans cet exercice vous apprendrez à configurer une instance de Red Hat AMQ message broker sur OpenShift.
 
 # Creating an Initial Project
 To get started, first we need to login to OpenShift.
