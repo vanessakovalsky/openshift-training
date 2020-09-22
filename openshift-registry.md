@@ -2,61 +2,48 @@
 
 exercice original : https://www.katacoda.com/courses/openshift/subsystems/container-internals-lab-2-0-part-3
 
-This lab is focused on understanding what container registries are for and how they work.
+Cette exercice est axé sur la compréhension de à quoi sert un registre de conteneurs et comment il fonctionne .
 
-By the end of this lab you should be able to:
+A la fin de cet exercice vous serez capable de :
 
-* Evaluate the quality of a container registry
-* Evaluate the quality of a container repository
-* Share your images using public and private registries
-* Outline
-* Understanding the basics of trust - quality & provenance
-* Evaluating four different public registries
-* Evaluating container repositories - trusted base images
-* Sharing your container images
+* Evaluer la qualité d'un registre de conteneurs
+* Evaler la qualité d'un dépôt de conteneurs
+* Partager vos images en utilisant des registres publics et privés
 
-# Understanding the Basics of Trust - Quality & Provenance
-The goal of this exercise is to understand the basics of trust when it comes to Registry Servers and Repositories. 
-This requires quality and provenance - this is just a fancy way of saying that:
 
-You must download a trusted thing
-You must download from a trusted source
-Each of these is necesary, but neither alone is sufficient. This has been true since the days of downloading ISO images for Linux distros. 
-Whether evaluating open source libraries or code, prebuilt packages (RPMs or Debs), or Container Images, we must:
+# Comprendre les base de la confiance - la qualité et la provenance
 
-determine if we trust the image by evaluating the quality of the code, people, and organizations involved in the project. If it has enough history, 
-investment, and actually works for us, we start to trust it.
+L'objectif de cet exercice est de comprendre les bases de la confiance lorsqu'il s'agit de serveur de registres et de depôts.
+Cela nécessite de la qualité et de contrôler la provenance - ce qui est juste une manière élégante de dire :
 
-determine if we trust the registry, by understanding the quality of its relationship with the trusted project - if we download something from 
-the offical GitHub repo, we trust it more than from a fork by user Haxor5579. This is true with ISOs from mirror sites and with image repositories 
-built by people who aren't affiliated with the underlying code or packages.
+1. Vous devez télécharger un élément de confiance
+2. Vous devez télécharger depuis une source sûre
 
-There are plenty of examples where people ignore one of the above and get hacked. In a previous lab, we learned how to break the URL down into 
-registry server, namespace and repository.
+Chacun de ces éléments est nécessaire, mais aucun ne suffit seul. Cela est vrai depuis que l'on télécharge des images ISO pour les distributions Linux.
+Afin d'évaluer les bibliothèques ou le code open source, les paquets pré-construits (RPMs ou Debs), les images de conteneurs, nous devons :
 
-## Trusted Thing
-From a security perspective, it's much better to remotely inspect and determine if we trust an image before we download it, expand it, and 
-cache it in the local storage of our container engine. Everytime we download an image, and expose it to the graph driver in the container engine, 
-we expose ourselves to potential attack. First, let's do a remote inspect with Skopeo (can't do that with docker because of the client/server nature):
+1. determiner si nous voulons faire confiance à l'image en évaluant la qualité du code, les personnes, et les organisations impliquées dans le projet. Si le projet a assez d'historique, d'investissement et qu'il fonctionne pour nous, nous commençons à lui faire confiance.
 
+2. determiner si nous voulons faire confiance au registre, en comprenant les qualité de ses relations avec les projets de confiance - si nous téléchargeons quelque chose depuis le dépôt Github officiel, nous lui faisons plus confiance que depuis un fork d'un utilisateur Haxor5579. Cela est vrai pour les sites miroirs des ISOS et pour les dépôts d'images construites par les personne qui ne sont pas affiliées avec le code sous-jacent ou les paquets.
+
+Il y a de nombreux exemples ou les gens ignore d'un de ces deux principes et sont hackés. 
+
+## Objet de confiance
+Du point de vue de la sécurité, il est mieux de vérifier à distance et de déterminer si nous pouvons faire confiance à une image avant de la télécharger, de l'ouvrir et de la mettre en cache dans le stockage local de notre moteur de conteneur. Chaque fois que vous téléchargez une image, et l'exposer au gestionnaire de l'engin de contôle, vous vous exposez à des attaques potentielles. Commençons par faire une inspection à distance avec Skopeo (on ne peut pas le faire avec Docker à cause de la nature du client/serveur): 
+```
 skopeo inspect docker://registry.fedoraproject.org/fedora
+```
+Etudions le JSON. Il n'y a rien à l'intérieur qui nous aide à déterminer si nous faisons confiance au dépôt. Il "dit" qu'il a été créé par le projet Fedora ("vendor": "Fedora Project") mais nous n'avons aucune idée de si cela est vrai. Nous devons avancer pour vérifier si nous faisons confiance à la source, puis déterminer si nous pouvons faire confiance à l'objet.
 
-Examine the JSON. There's really nothing in there that helps us determine if we trust this repository. It "says" it was created by 
-the Fedora project ("vendor": "Fedora Project") but we have no idea if that is true. We have to move on to verifying that we trust the source,
-then we can determin if we trust the thing.
+## Source sûre 
 
-## Trusted Source
-There's a lot of talk about image signing, but the reality is, most people are not verifying container images with signatures. 
-What they are actually doing is relying on SSL to determine that they trust the source, then inferring that they trust the container image. 
-Lets use this knowledge to do a quick evaluation of the official Fedora registry:
-
+IL y a de nombreuses discussions autour de la signature d'image, mais en réalité, la plupart des gens ne vérifie pas les images de conteneurs avec leurs signatures. Ce qu'ils font est lié au SSL pour déterminé s'ils font confiance à la source, puis décider s'il font confiance à l'image du conteneur.
+Utilisons cette connaissance pour faire une évaluation rapide du registre officielle de Fedora :
+```
 curl -I https://registry.fedoraproject.org
-
-Notice that the SSL certificate fails to pass muster. That's because the DigiCert root CA certificate is not in /etc/pki on this CentOS lab box. 
-On RHEL and Fedora this certficate is distributed by default and the SSL certificate for registry.fedoraproject.org passes muster. 
-So, for this lab, you have to trust me, I tested it :-) If you were on a Fedora or Red Hat Enterprise Linux box with the right keys, 
-the output would have looked like this:
-
+```
+Noter que le certificat SSL echoue à passer le modèle. Cela vient du fait que le certificat racine Digicert root CA n'est pas dans /etc/pki dans cette machine d'exercice. Sur RHEL et Fedora, ce certificat est distribué par défaut et le certificat SSL du registre pour registry.fedoraproject.org passe le modèle. Donc pour cet exercice, vous devez me faire confiance, je l'ai testé :) Si vous êtes sur un machine avec Fedora ou Red Hat Enterprise Linux avec les bonnes clés, la sortie ressemble à cela :
+```
 HTTP/2 200 
 date: Thu, 25 Apr 2019 17:50:25 GMT
 server: Apache/2.4.39 (Fedora)
@@ -73,45 +60,38 @@ apptime: D=280
 x-fedora-proxyserver: proxy10.phx2.fedoraproject.org
 x-fedora-requestid: XMHzYeZ1J0RNEOvnRANX3QAAAAE
 content-type: text/html
-
-Even without the root CA certificate installed, we can discern that the certicate is valid and managed by Red Hat, which helps a bit:
-
+```
+Même sans le certificat racine CA installé, on peut distinguer que le certificat est validé et géré par Red, ce qui aide un peu : 
+```
 curl 2>&1 -kvv https://registry.fedoraproject.org | grep subject
-
-Think carefully about what we just did. Even visually validating the certificate gives us some minimal level of trust in this registry server. 
-In a real world scenario, rememeber that it's the container engine's job to check these certificates. That means that Systems Administrators need 
-to distribute the appropriate CA certificates in production. Now that we have inspected the certificate, we can safely pull the trusted repository 
-(because we trust the Fedora project built it right) from the trusted registry server (because we know it is managed by Fedora/Red Hat):
-
+```
+Réflechissez à ce que nous venons de faire. Meme une validation visuelle du certificat nous donne un niveau minimum de confiance dans le serveur de registre. Dans les scénario réél, rappelez-vous que c'est le boulot du moteur de conteneur de vérifier ces certificats. Cela signifie que l'administrateur système doit distribuer les bons certificats CA en production. Maintenant que nous avons inspecté le certificat, nous pouvons récupérer de manière sécurisé le dépôt de confiance (parce que nous faisons confiance au projet Fedora qui l'a construit) depuis le serveur de registre de confiance (parce que nous savons qu'il est géré par Fedora/Red Hatà :
+```
 podman pull registry.fedoraproject.org/fedora
+```
+Continuons avec l'évaluation de dépôt et de serveurs de registres plus délicat.
 
-Now, lets move on to evaluate some trickier repositories and registry servers...
+# Evaluer la confiance - Images et  serveur de Registre
+L'objectif de cet exercice est d'apprendre à évaluer les images de conteurs et les serveurs de registre.
 
-# Evaluating Trust - Images and Registry Servers
-The goal of this exercise is to learn how to evaluate Container Images and Registry Servers.
+## Evaluer les Images
 
-## Evaluating Images
-First, lets start what we already know, there is often a full functioning Linux distro inside a container image. That's because it's useful 
-to leverage existing packages and the dependency tree already created for it. This is true whether running on bare metal, in a virtual machine, 
-or in a container image. It's also important to consider the quality, frequency, and ease of consuming updates in the container image.
+Démarrons avec ce que nous savoans déjà, il y a souvent une distribution Linux pleinement fonctionnelle dans une image de conteneur. C'est parce qu'il est utile d'utiliser des paquets existants et des arbres de dépendances déjà créé pour cela. Cela est vrai que la distribution tourne sur un bare metal, une machine virtuelle ou une image de conteneur. Il est également important de considérer la qualité, la fréquence et la facilité de mise à jours dans les images de conteneurs.
 
-To analyze the quality, we are going to leverage existing tools - which is another advantage of consuming a container images based on a Linux distro. 
-To demonstrate, let's examine images from four different Linux distros - CentOS, Fedora, Ubuntu, and Red Hat Enterprise Linux. Each will provide 
-differing levels of information:
+Pour analiser la qualité, nous utilisons des outils existants - ce qui est un autre avantage à utilsier des images de conteneurs basées sur des distributions Linux. Pour démonter cela, examinons des images de quatre distribution Linux différente - CentOS, Fedora, Ubuntu, et Red Hat Enterprise Linux. Chacune fournit différent niveau d'informations :
 
 ## CentOS
+```
 podman run -it docker.io/centos:7.0.1406 yum updateinfo
-
-CentOS does not provide Errata for package updates, so this command will not show any information. This makes it difficult to map CVEs to RPM packages. 
-This, in turn, makes it difficult to update the packages which are affected by a CVE. Finally, this lack of information makes it difficult to score a 
-container image for quality. A basic workaround is to just update everything, but even then, you are not 100% sure which CVEs you patched.
+```
+CentOs ne fournit pas d'Errata pour la mise à jour des paquets, donc cette commande ne renvoit aucune information. Cela rend difficile de faire correspondre les CVEs au paquets RPM. Ce qui, à son tour, rend difficile de mettre à jour le paquet qui est affecté par un CVE. Finalement, ce manque d'information rend difficile de noter l'image de conteneu pour la qualité. Une solution de contournement basique est de tout mettre à jour, mais même en le faisant, vous n'êtes pas sûr à 100% que les CVEs sont patchés.
 
 ## Fedora
+```
 podman run -it registry.fedoraproject.org/fedora dnf updateinfo
-
-Fedora provides decent meta data about package updates, but does not map them to CVEs either. Results will vary on any given day, but the output 
-will often look something like this:
-
+```
+Fedora fournit des informations décentes pour les mises à jour de paquets, mais ne les lies pas au CVEs non plus. Les résultats varient en fonction du jour, mais la sortie ressemble à celle-ci :
+```
 Last metadata expiration check: 0:00:07 ago on Mon Oct  8 16:22:46 2018.
 Updates Information Summary: available
     5 Security notice(s)
@@ -119,96 +99,83 @@ Updates Information Summary: available
         2 Low Security notice(s)
     5 Bugfix notice(s)
     2 Enhancement notice(s)
+```
 ## Ubuntu
+```
 podman run -it docker.io/ubuntu:trusty-20170330 /bin/bash -c "apt-get update && apt list --upgradable"
-
-Ubuntu provides information at a similar quality to Fedora, but again does not map updates to CVEs easily. 
-The results for this specific image should always be the same because we are purposefully pulling an old tag for demonstration purposes.
+```
+Ubuntu fournit des informations d'un même niveau de qualité que Fedora, mais là aussi on ne fais pas facilement la correspondance avec les CVEs. Le resultat de cette images spécifique devrait toujours être le même car nous avons récupérer une vielle image à dessein pour la démonstration..
 
 ## Red Hat Enterprise Linux
+```
 podman run -it registry.access.redhat.com/ubi7/ubi:7.6-73 yum updateinfo security
-
-Regretfully, we do not have the active Red Hat subscriptions necessary to analyze the Red Hat Universal Base Image (UBI) on the command line, 
-but the output should look like the following if ran on RHEL or in OpenShift:
-
+```
+Malheureusement, nous n'avons pas la licence Red Hat nécessaire pour analyser l'Image de Base Universel de Red Hat en ligne de commande, mais la sortie devrait ressembler à ça dans RHEL ou dans OpenShift :
+```
 RHSA-2019:0679 Important/Sec. libssh2-1.4.3-12.el7_6.2.x86_64
 RHSA-2019:0710 Important/Sec. python-2.7.5-77.el7_6.x86_64
 RHSA-2019:0710 Important/Sec. python-libs-2.7.5-77.el7_6.x86_64
-Notice the RHSA-: column - this indicates the Errata and it's level of importnace. This errata can be used to map the update to a particular CVE, 
-giving you and your security team confidence that a container image is patched for any particular CVE. Even without a Red Hat subscription, 
-we can analyze the quality of a Red Hat image by looking at the Red Hat Container Cataog and using the Contianer Health Index:
+```
+Noter que la colonne RHSA indique l'Errata et son niveau d'importance. Cette errata peut être utilisé pour faire la correspondace à un CVE particulier donnant à vous et à vos équipe de sécurité confiance dans l'image de conteneur qui est patche pour chaque CVE particulier. Même sans licence Red Hat, nous pouvons analyser la qualité des images Red Hat en regardant le Catalog de COntenuers Red Hat et en utilisant l'index de santé des conteneurs :
 
-Click: Red Hat Enterprise Universal Base Image 7
+Cliquer: [Red Hat Enterprise Universal Base Image 7](https://catalog.redhat.com/software/containers/registry/registry.access.redhat.com/repository/ubi7/ubi?tag=7.6-73)
 
 
-## Evaluating Registries
-Now, that we have taken a look at several container images, we are going to start to look at where they came from and how they were built - 
-we are going to evaluate four registry servers - Fedora, podmanHub, Bitnami and the Red Hat Container Catalog:
+## Evaluer registres
+
+Maintenant que nous avons jeter un oeil sur plusieurs images de conteneurs, nous pouvons commencer à jeter un oeil sur leur provenance et comment
+elles sont construites - nous allons évaluer quatre serveurs de registre - Fedora, podmanHub, Bitnami et le Red Hat Container Catalog:
 
 ## Fedora Registry
-Click: registry.fedoraproject.org
+Cliquer: [registry.fedoraproject.org](https://registry.fedoraproject.org/)
 The Fedora registry provides a very basic experience. You know that it is operated by the Fedora project, so the security should be pretty 
 similar to the ISOs you download. That said, there are no older versions of images, and there is really no stated policy about how often the 
 images are patched, updated, or released.
 
 ## podmanHub
-Click: https://hub.podman.com/_/centos/
-podmanHub provides "official" images for a lot of different pieces of software including things like CentOS, Ubuntu, Wordpress, and PHP. That said, there really isn't standard definition for what "official" means. Each repository appears to have their own processes, rules, time lines, lifecycles, and testing. There really is no shared understanding what official images provide an end user. Users must evaluate each repository for themselves and determine whether they trust that it's connected to the upstream project in any meaningful way.
+Cliquer: https://hub.podman.com/_/centos/
+podmanHub fournit des images "officielles" pour de nombreux composants logiciels incluant des choses comme CentOS, Ubuntu, Wordpress, et PHP. Disons le, il n'y pas de définition standard du sens de "oficielle". Chaque dépôt semble avoir ses propres process, règles, planning, cycles de vie et tests. Il n'y a pas de compréhension partagé de ce qu'est une image officielle fournit à un utilisateur. Les utilisateurs doivent évaluer chaque dépôt par eux-mêmes et déterminer s'ils croient qu'il est connecté au projet principal.
 
 ## Bitnami
-Click: https://bitnami.com/containers
-Similar to podmanHub, there is not a lot of information linking these repostories to the upstream projects in any meaningful way. There is not even a clear understanding of what tags are available, or should be used. Again, not policy information and users are pretty much left to sift through GitHub repositories to have any understanding of how they are built of if there is any lifecycle guarantees about versions. You are pretty much left to just trusting that Bitnami builds containers the way you want them...
+Cliquer: https://bitnami.com/containers
+Similaire à podmanHub, il n'y a pas beaucoup d'information liants ces depôts aux projets principaux. Il n'y a même pas de compréhension clair sur les tags disponible, ou qui doivent tre utilisé. Encore une fois, pas de police d'information et les utilisateurs doivent se débrouiller au milieu des depôt Github avec leur propre comprehension de comment il sont construit et s'il y a des cycles de vies avec une garanties sur les versions. Vous devez faire confiance à Bitami pour construire des conteneurs de la manière dont vous les voulez ...
 
 ## Red Hat Container Catalog
-Click: https://access.redhat.com/containers
-The Red Hat Container catalog is setup in a completely different way than almost every other registry server. There is a tremendous amount of information about each respository. Poke around and notice how this particular image has a warning associated. For the point of this exercise, we are purposefully looking at an older image with known vulnerabilities. That's because container images age like cheese, not like wine. Trust is termporal and older container images age just like servers which are rarely or never patched.
+Cliquer: https://access.redhat.com/containers
+Le Red Hat Container catalog est paramètré d'une manière totalement différence des autres serveurs de registres. Il y a de très nombreuses informations pour chaque dépôt. Fouillez et remarquer comme cette image particulière a un warning associé. Pour cet exercice, nous allons volontairement chercher une vieille image avec des failles connus. C'est parce que les images de conteneurs vieillissent comme le fromage, pas le vin. La confiannce est lié au temps, et l'age des images de conteneur comme des serveurs indiquent qu'ils sont rarement ou jamais patchés. 
 
-Now take a look at the Container Health Index scoring for each tag that is available. Notice, that the newer the tag, the better the letter grade. The Red Hat Container Catalog and Container Health Index clearly show you that the newer images have a less vulnerabiliites and hence have a better letter grade. To fully understand the scoring criteria, check out Knowledge Base Article. This is a compeltely unique capability provided by the Red Hat Container Catalog because container image Errata are produced tying container images to CVEs.
+Regardon maintenant le score de chaque tag dans le Container Health Index qui est disponile. Remarquez que plus le tag est récent, meilleur est la lettre de grade. Le Red Hat Container Catalog et le Container Health Index montre clairement que les images les plus récentes ont moins de failles et leur attribue une meilleur lettre de grade. Pour comprendre complètement les critères de score, lire l'article [Knowkledge Base Article](https://access.redhat.com/articles/2803031). C'est une capacité complète unique qui est fournit par le Red Hat Container Catalogue puisque les erratas d'image de conteneur sont produit de manière subordonnée au CVEs.
 
-## Summary
-Knowing what you know now:
-
-* How would you analyze these container repositories to determine if you trust them?
-* How would you rate your trust in these registries?
-* Is brand enough? Tooling? Lifecycle? Quality?
-* How would you analyze repositories and registries to meet the needs of your company?
-These questions seem easy, but their really not. It really makes you revisit what it means to "trust" a container registry and repository...
 
 # Analyzing Storage and Graph Drivers
-In this lab, we are going to focus on how Container Enginers cache Repositories on the container host. There is a little known or understood fact - 
-whenever you pull a container image, each layer is cached locally, mapped into a shared filesystem - typically overlay2 or devicemapper. This has a 
-few implications. First, this means that caching a container image locally has historically been a root operation. Second, if you pull an image, or 
-commit a new layer with a password in it, anybody on the system can see it, even if you never push it to a registry server.
+Dans cet exercie, nous allons nous concentrer sur comment les moteurs de conteneurs mettent en cache les dépôts sur l'hôt de conteneur. Il y a un minimum de connaissances requises - lorsque l'on "pull" une image de conteneur, chaque couche est mise en cache localement, et mappé dans un système de fichier partagé- par exemple overlay2 ou devicemapper. Cela implique que la mise en cache de l'image de conteneur en loca a été faite en tant qu'opération root. Cela implique aussi, que si l'on pull ou commit une nouvelle couche avec un mot de passe à l'intérieur, tout le monde sur le système peut le voir, même s'il n'est jamais pousser sur un serveur de registre.
 
-Let's start with a quick look at Docker and Podman, to show the difference in storage:
-
+Commençons avec un regard rapide sur Docker et Podman, pour voir la différence de stockage :
+```
 docker info 2>&1 | grep -E 'Storage | Root'
-
-Notice what driver it's using and that it's storing container images in /var/lib/docker:
-
+```
+Noter le driver utilisé et étudions les images stockées dans  /var/lib/docker:
+```
 tree /var/lib/docker/
-
-Now, let's take a look at a different container engine called podman. It pulls the same OCI compliant, docker compatible images, but uses a 
-different drivers and storage on the system:
-
+```
+Regardons maintenant un moteur de conteneur différent appelé podman. Il récupère les mêmes, OCI compliant, images compatibles docker, mais il ytilise un 
+driver et un stockage différent sur le système.
+```
 podman info | grep -A3 Graph
-
-First, you might be asking yourself, what the heck is d_type?. Long story short, it's filesystem option that must be supported for overlay2 to 
-work properly as a backing store for container images and running containers. Now, take a look at the actuall storage being used by Podman:
-
+```
+Vous devez vous demandez ce qu'est le d_type ? Pour faire simple, c'est une option du système de fichier qui peut être supporté pour que l'overlay2 fonctionne correctement en tant que stockage pour les images de conteneurs et les conteneurs en cours d'execution. Regardons maintenant le stockage actuel utilisé par podman :
+```
 tree /var/lib/containers/storage
-
-Now, pull an image and verify that the files are just mapped right into the filesystem:
-
+```
+Maintenant récupérons une image et vérifions que les fichiers sont au bon endroit dans le système de fichier
+```
 podman pull registry.access.redhat.com/ubi7/ubi
 cat $(find /var/lib/containers/storage | grep redhat-release | tail -n 1)
+```
+Avec Docker et Podman, ainsi que la plupart de moteurs de conteneurs de la planet, les couches d'image sont mappé une par une dans des sortes de stockage, avec des snapshots par devicemapper, ou des dossier dans overlay2.
 
-With both Docker and Podman, as well as most other container engines on the planet, image layers are mapped one for one to some kind of storage, 
-be it thinp snapshots with devicemapper, or directories with overlay2.
-
+Cela a des implications sur la manières dont on déplace des images de conteneurs d'un registre à l'autre. Vous devez d'abord la récupérer en local et la mettre en cache. Puis vous devez lui donner un tag avec une URL, un Namespace, un Repository et un Tag que vous voulez dans le nouveau registre. Puis vous devez la pousser. 
 This has implications on how you move container images from one registry to another. First, you have to pull it and cache it locally. 
 Then you have to tag it with the URL, Namespace, Repository and Tag that you want in the new regsitry. Finally, you have to push it. 
-This is a convoluted mess, and in a later lab, we will investigate a tool called Skopeo that makes this much easier.
 
-For now, you understand enough about registry servers, repositories, and how images are cached locally. Let's move on.
 
