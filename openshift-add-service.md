@@ -19,60 +19,57 @@ AMQ Broker est basé sur le projet Apache ActiveMQ Artemis.
 ## Objectif 
 Dans cet exercice vous apprendrez à configurer une instance de Red Hat AMQ message broker sur OpenShift.
 
-# Creating an Initial Project
-To get started, first we need to login to OpenShift.
-
-To login to the OpenShift cluster use the following commmand in your Terminal:
-
+# Créer le projet intial 
+Pour commencer, nous devons nous connecter à OpenShift.
+Pour se connecter au cluster Openshift, utiliser la commande suivante : 
+```
 oc login -u developer -p developer 2886795276-8443-kitek02.environments.katacoda.com --insecure-skip-tls-verify=true
-
-You can click on the above command (and all others in this scenario) to automatically copy it into the terminal and execute it.
-
-This will log you in using the credentials:
-
+```
+Cela vous connectera avec ces identifiants :
+```
 Username: developer
 Password: developer
-You should see the output:
-
+```
+Vous devriez voir le résultat :
+```
 Login successful.
-
-You don't have any projects. You can try to create a new project, by running
-
+```
+Vous n'avez pas de projet, vous pouvez en créer un en lançant : 
+```
     oc new-project <projectname>
-For this scenario lets create a project called messaging by running the command:
-
+```
+Pour ce scénario, créons un projet appelé messaging avec cette commande :
+```
 oc new-project messaging
-
-You should see output similar to:
-
+```
+Vous devriez avoir un retour similaire à : 
+```
 Now using project "messaging" on server "https://172.17.0.41:8443".
-
-You can add applications to this project with the 'new-app' command. For example, try:
-
+```
+Vous pouvez ajouter des applications à ce projet avec la commande 'new-app'. Par exemple, essayez :
+```
     oc new-app centos/ruby-22-centos7~https://github.com/openshift/ruby-ex.git
+```
+pour construire un nouvel exemple d'application en Ruby
 
-to build a new example application in Ruby.
-In the next, you will deploy a new instance of the AMQ broker.
+# Déployer une instance de Broker
+Avec l'espace de projet disponible, nous allons créer une instance de broker.
 
-# Deploying a Broker Instance
-With the project space now available, let's create the broker instance.
-
-To allow ingress traffic to the messaging destinations, configure the required secrets with the following command:
-
+Pour autoriser le trafic ingress vers les destinations de message, configurer les secrets nécessaires avec la commande suivante :
+```
 oc create sa amq-service-account
-
-Add cluster capabilities to service account
-
+```
+Ajouter une capacité au cluster via un compte de service :
+```
 oc policy add-role-to-user view system:serviceaccount:messaging:amq-service-account
-
-Create a new app using the OpenShift command:
-
+```
+Créer une nouvelle application en utilisant la commande :
+```
 oc new-app amq-broker-71-basic -p AMQ_PROTOCOL=openwire,amqp,stomp,mqtt -p AMQ_USER=amquser -p AMQ_PASSWORD=amqpassword -p AMQ_QUEUES=example
-
-This command will create a broker instance with the OpenWire and AMQP protocols enabled. At the same time, will create a queue named example.
-
-You should see the output:
-
+```
+Cette commande créer une instance de broker avec les protocoles OpenWire et AMQP activés. En mme temps, cela créer une queue appelée example
+Vous aurez le retour suivant :
+```
 --> Deploying template "openshift/amq-broker-71-basic" to project messaging
 
      JBoss AMQ Broker 7.1 (Ephemeral, no SSL)
@@ -103,9 +100,10 @@ You should see the output:
     service "broker-amq-tcp" created
     deploymentconfig "broker-amq" created
 --> Success
-    Access your application via route 'console-messaging.2886795275-80-kitek02.environments.katacoda.com'
-    Run 'oc status' to view your app.
-When the provisioning of the broker finishes, you will be set to start using the service. In the next step you will deploy a simple messging application.
+```
+Accéder à votre application via la route 'console-messaging.2886795275-80-kitek02.environments.katacoda.com'
+Lancer 'oc status' pour voir votre app.
+Lorsque le provisionnement du broker est terminé, vous pourrez commencer à utiliser le service.
 
 # Creating a Simple Messaging Application
 The sample project in the upper right part side of the screen, shows the components of your sample Node.js project. This project uses Red Hat 
@@ -121,26 +119,28 @@ based on the AMQP Rhea Project.
 ## Inspect the application code
 Click the links below to open each file and inspect its contents:
 
-package.json - Metadata about the project: name, version, dependencies, and other information needed to build and maintain the project.
-app.js - Main logic of the sample application.
+* package.json - Metadata about the project: name, version, dependencies, and other information needed to build and maintain the project.
+* app.js - Main logic of the sample application.
 ## Install Dependencies
 Switch to the application directory in the command line by issuing the following command:
-
+```
 cd /root/projects/amq-examples/amq-js-demo
-
+```
 Dependencies are listed in the package.json file and declare which external projects this sample app requires. To download and install them, 
 run the following command:
-
+```
 npm install
-
+```
 It will take a few seconds to download, and you should see a final report such as
-
+```
 added 140 packages in 2.937s
+```
+
 ## Deploy
 Build and deploy the project using the following command:
-
+```
 npm run openshift
-
+```
 This uses NPM and the Nodeshift project to build and deploy the sample application to OpenShift using the containerized Node.js runtime.
 
 The build and deploy may take a minute or two. Wait for it to complete.
@@ -161,9 +161,10 @@ OpenShift Console Tab
 The first screen you will see is the authentication screen. Enter your username and password and then log in.
 
 Your credentials are:
-
+```
 Username: developer
 Password: developer
+```
 Web Console Login
 
 After you have authenticated to the web console, you will be presented with a list of projects that your user has permission to work with.
@@ -185,7 +186,7 @@ Click in the logs tab to access the application container logs.
 Log
 
 You will see a message every 10 seconds with the following text:
-
+```
 Message received: Hello World!
-
+```
 This message is been sent and received to the example queue by the application you just deployed.
