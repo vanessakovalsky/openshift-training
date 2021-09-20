@@ -10,7 +10,7 @@
 
 * [Comprendre les registres de conteneurs](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-registry.md)
 
-* [Utiliser ImageStream](https://github.com/fenago/katacoda-scenarios/blob/master/learn-openshift/openshift-imagestreams/steps/3/text.md)
+* [Utiliser ImageStream](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-imagestream.md)
 
 * [Déployer Springboot](https://learn.openshift.com/middleware/courses/middleware-spring-boot/spring-getting-started)
 
