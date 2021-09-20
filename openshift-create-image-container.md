@@ -65,7 +65,7 @@ docker image history <image ID>
 
 * Afin de pouvoir envoyer notre image, nous allons devoir nous connecter au registre OpenShift, pour cela utiliser les commandes suivantes :
 ```sh
-docker login -u `oc whoami` -p `oc whoami --show-token` docker tag newimage [URL-DE-VOTRE-REGISTRE]:[PORT]/newimage
+docker login -u `oc whoami` -p `oc whoami --show-token` [URL-DE-VOTRE-REGISTRE]
 ```
 
 * Puis nous allons commiter l'image, puis lui associé un tag et enfin l'envoyer sur le registre 

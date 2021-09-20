@@ -3,22 +3,20 @@
 
 ## DO-288 
 * [Premières manipulations d'OpenShift](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-premiers-pas.md): 
-* [Transférer des fichiers dans et depuis les conteneurs](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-transfert-fichiers.md) 
 
 
 * [Construire une image de conteneur](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-create-image-container.md)
 
-* [Comprendre les registres de conteneurs](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-registry.md)
+* (Optionnel)[Comprendre les registres de conteneurs](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-registry.md)
 
 * [Utiliser ImageStream](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-imagestream.md)
 
-* [Déployer Springboot](https://learn.openshift.com/middleware/courses/middleware-spring-boot/spring-getting-started)
+* [JAVA - Déployer Springboot](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-springboot.md)
 
-* [Déployer et connecter une BDD](https://learn.openshift.com/introduction/port-forwarding/)
+* (Optionel si pas de Java)[Déployer et connecter une BDD](https://learn.openshift.com/introduction/port-forwarding/)
 
-* [Accéder BDD depuis Springboot](https://learn.openshift.com/middleware/courses/middleware-spring-boot/spring-db-access)
 
-* [Ajouter du stockage persistant (Elastic)](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-persistent-storage.md)
+* (Optionel)[Ajouter du stockage persistant (Elastic)](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-persistent-storage.md)
 
 * [Construire une image S2I](https://www.katacoda.com/sjbylo/courses/intermediate/simple-s2i-builder)
 
