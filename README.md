@@ -10,6 +10,8 @@
 
 * [Comprendre les registres de conteneurs](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-registry.md)
 
+* [Utiliser ImageStream](https://github.com/fenago/katacoda-scenarios/blob/master/learn-openshift/openshift-imagestreams/steps/3/text.md)
+
 * [Déployer Springboot](https://learn.openshift.com/middleware/courses/middleware-spring-boot/spring-getting-started)
 
 * [Déployer et connecter une BDD](https://learn.openshift.com/introduction/port-forwarding/)
@@ -18,7 +20,10 @@
 
 * [Ajouter du stockage persistant (Elastic)](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-persistent-storage.md)
 
+* [Construire une image S2I](https://www.katacoda.com/sjbylo/courses/intermediate/simple-s2i-builder)
 
+
+* [Utiliser les templates OpenShift](https://www.katacoda.com/ernesto/courses/learn-openshift/openshift-templates)
 
 * [Déployer avec Helm](https://learn.openshift.com/gitops/working-with-helm/)
 
@@ -54,3 +59,6 @@ Pour aller plus loin :
 * [Comprendre les registres de conteneurs](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-registry.md)
 
 *[Déployer Prometheus et Grafana](https://learn.openshift.com/introduction/deploy-prometheus-grafana/)
+* [Déployer une application à l'aide de template](https://www.katacoda.com/ernesto/courses/learn-openshift/openshift-deploying-applications-using-templates)
+
+*
