@@ -297,7 +297,7 @@ Forcer manuellement un rédemarrage du serveur web d'application aurait fait le 
 
 Dans le cad u mod_wsgi-express et la manière dont l'application a été configuré, on peut l'activer en définissant une variable d'environnement pour le déploiement. Pour définir la variable d'environnement lancer :
 ```
-oc set env blog MOD_WSGI_RELOAD_ON_CHANGES=1
+oc set env deployment blog MOD_WSGI_RELOAD_ON_CHANGES=1
 ```
 Cette commande met à jour la configuration du déploiement, eteint le pod existant et le remplace avec un nouvelle instance de notre application avec la variable d'environement qui est passé à l'application.
 
@@ -352,7 +352,7 @@ Si vous n'avez pas encore déployé votre application, mais que vous souhaitez p
 
 Pour créer un application bateau pour cet objectif, voici la commande :
 ```
-oc run dummy --image centos/httpd-24-centos7
+oc new-app --name=dummy  centos/httpd-24-centos7
 ```
 Nous utilisons la commande oc run pour créer une configuration de déploiement et un pod managé. Aucun service n'est crée car nosu n'avons pas besoin que l'application s'execute, une instance du serveru Apache HTTPD dans ce cas, qui pourrait être exposé. Ici, le serveur Apache HTTPd est utilisé seulement pour permettre l'eecution en continue du pod.
 
@@ -366,7 +366,7 @@ oc get all --selector run=dummy -o name
 ```
 Maintenant que nous avons une application qui fonctionne, nous avons besoin de créer un volume persistant et de le monter dans notre application bateau. En faisant cela, nous assignerons un nom à notre claim de données afin de pouvoir utiliser ce nom plus tard. Nous montons le volume perisistant dans /mnt à l'intérieur du conteneur, le dossier standard utilisé par les système Linux pour les montages de volumes temporaire.
 ```
-oc set volume dummy --add --name=tmp-mount --claim-name=data --type pvc --claim-size=1G --mount-path /mnt
+oc set volume deployment/dummy --add --name=tmp-mount --claim-name=data --type pvc --claim-size=1G --mount-path /mnt
 ```
 Cela déclenche un nouveau déploiement de notre application bateau, cette fois-ci avec le volume persistant montée. Vous pouvez suivre l'avancée du déploiement pour s'avoir s'il est complet, en lançant :
 ```
@@ -390,7 +390,7 @@ oc rsh $POD ls -las /mnt
 ```
 Si vous avez terminer avec le volume persistant et que vous avez besoin de répéter le process avec un autre volume persistant et des données différentes, vous pouvez démonter le volume persistant de votre application bateau.
 ```
-oc set volume dummy --remove --name=tmp-mount
+oc set volume deployment/dummy --remove --name=tmp-mount
 ```
 Pour suivre le process et confirmer de nouveau que le re-déploiement a été complété.
 ```
@@ -407,7 +407,7 @@ oc rsh $POD ls -las /mnt
 Si vous avez déjà un claim volume persistant, comme nous actuellement, vous pouvez monter un claimed volume sur l'application à la place.
 C'est différent de ce qu'il y a ci-dessus puisque dans les deux cas on a créé un nouveau claim volume persistent et on l'a montée en même temps.
 ```
-oc set volume dummy --add --name=tmp-mount --claim-name=data --mount-path /mnt
+oc set volume deployment/dummy --add --name=tmp-mount --claim-name=data --mount-path /mnt
 ```
 Vérifiez l'état du re-déploiement :
 ```
