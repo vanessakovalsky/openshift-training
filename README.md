@@ -16,7 +16,7 @@
 * (Optionel si pas de Java)[Déployer et connecter une BDD](https://learn.openshift.com/introduction/port-forwarding/)
 
 
-* (Optionel)[Ajouter du stockage persistant (Elastic)](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-persistent-storage.md)
+* [Ajouter du stockage persistant (Elastic)](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-persistent-storage.md)
 
 * [Construire une image S2I](https://www.katacoda.com/sjbylo/courses/intermediate/simple-s2i-builder)
 
