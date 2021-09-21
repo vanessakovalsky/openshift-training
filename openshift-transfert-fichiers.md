@@ -47,10 +47,6 @@ Vous pouvez ajouter des applications à ce projets avec la commande new-app. Par
 ```
     oc new-app django-psql-example
 ```
-Pour constuire une nouvelle application en Python. Ou utiliser kubectl pour déployer une application simple Kubernetes.
-```
-    kubectl create deployment hello-node --image=gcr.io/hello-minikube-zero-install/hello-node
-```
 Nous n'utilisons pas la console web dans ce cours, mais vous pouvez vérifiez ce qu'il se passe dans la console web en cliquand sur l'onglet COnsole et en utilisant les mêmes identifiants que pour la ligne de commande.
 
 # Etape 2- Télécharger les fichiers depuis un conteneur
@@ -64,13 +60,12 @@ oc expose svc/blog
 ```
 Pour suivre le déploiement de l'application lancer :
 ```
-oc rollout status dc/blog
-```
-La commande s'arreter une fois que le déploiement de l'application a été complété et que l'application web est prête. 
+oc status 
+``` 
 
 Le résultat du déploiement sera l'execution du conteneur. Vous pouvez voir le nom des pods correspondant qui executent les conteneurs pour cette application en lançant : 
 ```
-oc get pods --selector deploymentconfig=blog
+oc get pods --selector deployment=blog
 ```
 Vous n'avez qu'une instance de l'application, donc un seul pod qui est listé, similaire à :
 ```
@@ -82,7 +77,7 @@ Pour les commandes suivantes qui intéragissent avec le pod vous aurez besoin du
 Pour faciliter la référence au nom du pod dans ces instructions, nous définissons une fonction shell pour capture le nom et le stocker comme variable d'environnement. Cette variable d'environnement sera utilisé dans les commandes à lancer.
 La commande que nous lançons avec la fonction shell pour obtenir le nom du pod sera : 
 ```
-oc get pods --selector deploymentconfig=blog -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'
+oc get pods --selector deployment=blog -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'
 ```
 Comme au-dessus, nous utilisons oc get pods avec un sélécteur de label, mais aussi une requête jsonpath pour extraire le nom du pod en cours d'execution.
 Pour créer la fonction shell lancer : 
@@ -91,7 +86,7 @@ pod() { local selector=$1; local query='?(@.status.phase=="Running")'; oc get po
 ```
 Pour enregistrer le nom du pod et le définir comme variable d'environnement POD lancer : 
 ```
-POD=`pod deploymentconfig=blog`; echo $POD
+POD=`pod deployment=blog`; echo $POD
 ```
 Pour créer un shell interactif avec le même conteneur executant l'application, vous pouvez utiliser la command oc rsh, suivi du nom de la variable d'environnement qui contient le pod :
 ```
@@ -302,18 +297,18 @@ Forcer manuellement un rédemarrage du serveur web d'application aurait fait le 
 
 Dans le cad u mod_wsgi-express et la manière dont l'application a été configuré, on peut l'activer en définissant une variable d'environnement pour le déploiement. Pour définir la variable d'environnement lancer :
 ```
-oc set env dc/blog MOD_WSGI_RELOAD_ON_CHANGES=1
+oc set env blog MOD_WSGI_RELOAD_ON_CHANGES=1
 ```
 Cette commande met à jour la configuration du déploiement, eteint le pod existant et le remplace avec un nouvelle instance de notre application avec la variable d'environement qui est passé à l'application.
 
 Suivre le re-déploiement de l'application en lançant :
 ```
-oc rollout status dc/blog
+oc status
 ```
 Puisque le pod existant a été éteint, il est nécessaire de ré-enregistrer le nom du nouveau pod.
 Because the existing pod has been shutdown, we will need to capture again the new name for the pod.
 ```
-POD=`pod deploymentconfig=blog`; echo $POD
+POD=`pod deployment=blog`; echo $POD
 ```
 Vous avez peut être remarque que le process de syncronisation qui tournait en arrière plan c'est aussi arrêté. Cela vient du fait que le pod ait été arrêté.
 
@@ -363,7 +358,7 @@ Nous utilisons la commande oc run pour créer une configuration de déploiement 
 
 Pour suvire le démarrage du pod, et s'assurer qu'il est déployé, utilisez : 
 ```
-oc rollout status dc/dummy
+oc status
 ```
 Une fois que le pod s'execute, vous pouvez voir la list limitée des ressources créés, et la comparer à ce qui aurait été crée en utilisant oc new-app en lançant : 
 ```
@@ -371,11 +366,11 @@ oc get all --selector run=dummy -o name
 ```
 Maintenant que nous avons une application qui fonctionne, nous avons besoin de créer un volume persistant et de le monter dans notre application bateau. En faisant cela, nous assignerons un nom à notre claim de données afin de pouvoir utiliser ce nom plus tard. Nous montons le volume perisistant dans /mnt à l'intérieur du conteneur, le dossier standard utilisé par les système Linux pour les montages de volumes temporaire.
 ```
-oc set volume dc/dummy --add --name=tmp-mount --claim-name=data --type pvc --claim-size=1G --mount-path /mnt
+oc set volume dummy --add --name=tmp-mount --claim-name=data --type pvc --claim-size=1G --mount-path /mnt
 ```
 Cela déclenche un nouveau déploiement de notre application bateau, cette fois-ci avec le volume persistant montée. Vous pouvez suivre l'avancée du déploiement pour s'avoir s'il est complet, en lançant :
 ```
-oc rollout status dc/dummy
+oc status
 ```
 Pour confirmer que le volume persistantclaim a été créé, vous pouvez lancer :
 ```
@@ -395,11 +390,11 @@ oc rsh $POD ls -las /mnt
 ```
 Si vous avez terminer avec le volume persistant et que vous avez besoin de répéter le process avec un autre volume persistant et des données différentes, vous pouvez démonter le volume persistant de votre application bateau.
 ```
-oc set volume dc/dummy --remove --name=tmp-mount
+oc set volume dummy --remove --name=tmp-mount
 ```
 Pour suivre le process et confirmer de nouveau que le re-déploiement a été complété.
 ```
-oc rollout status dc/dummy
+oc status
 ```
 On enregistre de nouveau le nom du pod courant :
 ```
@@ -412,11 +407,11 @@ oc rsh $POD ls -las /mnt
 Si vous avez déjà un claim volume persistant, comme nous actuellement, vous pouvez monter un claimed volume sur l'application à la place.
 C'est différent de ce qu'il y a ci-dessus puisque dans les deux cas on a créé un nouveau claim volume persistent et on l'a montée en même temps.
 ```
-oc set volume dc/dummy --add --name=tmp-mount --claim-name=data --mount-path /mnt
+oc set volume dummy --add --name=tmp-mount --claim-name=data --mount-path /mnt
 ```
 Vérifiez l'état du re-déploiement :
 ```
-oc rollout status dc/dummy
+oc status
 ```
 Enregistrer le nom du pod :
 ```
