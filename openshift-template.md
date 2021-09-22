@@ -258,12 +258,10 @@ Vous pouvez aussi créer un template à partir de ressources existantes. Pour ç
 Supprimons les ressources pour éviter les conflits : 
 `oc delete all --all`
 
-Et les recréé depuis le template exporté : 
-`oc new-app -f exported-template.yml`
+Et les recréé depuis le fichier exporté : 
+`oc create -f exported-template.yml`
 
 ```
---> Deploying template "advanced/exported-template" for "exported-template.yml" to project advanced
-
 --> Creating resources ...
     route "example-route" created
     pod "example-pod" created
