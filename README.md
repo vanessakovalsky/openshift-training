@@ -1,6 +1,5 @@
 # Formation OpenShift - Exercices
 
-
 ## DO-288 
 * [Premières manipulations d'OpenShift](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-premiers-pas.md): 
 

@@ -39,6 +39,10 @@ Un graphique est défini comme une collection de fichiers qui décrivent un set 
 
 Note : les fichiers de templates montré ci-dessus seront rendus dans des fichiers manifest Kubernetes avant d'être envoyé au serveur d'API de Kubernetes. Ils correspondent aux fichiers manifests que nous avons déployés avec `kubectl` (sans les fichiers helpers et de notes)
 
+**Attention** Afin d'utiliser le chart sur OpenShift qui ajoute des vérifications de sécurité supplémentaire, il faut modifier la ligne 22 du fichier guestbook/templates/redis-master-deployment.yaml et remplacer cette ligne par : 
+`        image: registry.redhat.io/rhscl/redis-5-rhel7@sha256:ad94680c22818ee1d4163c17924ed17e73c7d471e7ec704c4a97afc17fea740b`
+Cela permet de récupérer une image sécurisée de Redis qui fonctionne sur OpenShift
+
 Commençons l'installation du graphique. Si le projet `helm-demo` n'existe pas, vous devez le créer avec :
 
 ```console
