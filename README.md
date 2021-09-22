@@ -18,10 +18,10 @@
 
 * [Ajouter du stockage persistant (Elastic)](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-persistent-storage.md)
 
-* [Construire une image S2I](https://www.katacoda.com/sjbylo/courses/intermediate/simple-s2i-builder)
+* [Construire une image S2I](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-s2i-builder.md)
 
 
-* [Utiliser les templates OpenShift](https://www.katacoda.com/ernesto/courses/learn-openshift/openshift-templates)
+* [Utiliser les templates OpenShift](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-template.md)
 
 * [Déployer avec Helm](https://learn.openshift.com/gitops/working-with-helm/)
 
