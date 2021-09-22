@@ -23,11 +23,11 @@
 
 * [Utiliser les templates OpenShift](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-template.md)
 
-* [Déployer avec Helm](https://learn.openshift.com/gitops/working-with-helm/)
+* [Déployer avec Helm](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-helm.md)
 
 * [Monitorer et tracer ces applications](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-monitoring.md)
 
-* [Monitorer une application Spring](https://learn.openshift.com/middleware/courses/middleware-spring-boot/monitoring)
+* [Monitorer une application Spring](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-monitoring-springboot.md)
 
 * [Ci/CD avec Jenkins](https://www.middleware-solutions.fr/2017/05/09/integrationdeploiement-continue-sur-openshift/)
 
