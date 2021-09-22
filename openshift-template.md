@@ -105,7 +105,7 @@ La liste est plutôt longue, nous ne montrons qu'un extait contenant la ressourc
 
 Pour rendre les choses plus claires, voyons les expressions qui ont générés ces valeurs dans la définition brute du template : 
 
-`oc export template mariadb-persistent -n openshift`
+`oc get -o yaml template mariadb-persistent -n openshift `
 
 Vous avez remarqué, par exemple, que MYSQL_DATABASE is sampledb, alors que MYSQL_USER commence la chaine utilisateur par trois caractères alphanumériques, comme nous l'avons vu dans la liste précédente.
 
@@ -253,7 +253,7 @@ You chose to deploy httpd
 ## Créer un template à partir d'une ressource existante :  
 
 Vous pouvez aussi créer un template à partir de ressources existantes. Pour ça, utiliser la commande `export` : 
-`oc export all --as-template=exported-template > exported-template.yml`
+`oc get -o yaml all > exported-template.yml`
 
 Supprimons les ressources pour éviter les conflits : 
 `oc delete all --all`
