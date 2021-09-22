@@ -1,0 +1,42 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+labels:
+  role: web
+message: You chose to deploy ${WEB_SERVER}
+metadata:
+  creationTimestamp: "2021-09-22T10:17:29Z"
+  name: example-template
+  namespace: demo-vanessa
+  resourceVersion: "4281785"
+  uid: 28e496a5-1344-410e-8f4c-78360d711bfe
+objects:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    name: example-pod
+  spec:
+    containers:
+    - image: ${WEB_SERVER}
+      name: ${WEB_SERVER}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: example-svc
+  spec:
+    ports:
+    - port: 80
+    selector:
+      role: web
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: example-route
+  spec:
+    to:
+      kind: Service
+      name: example-svc
+parameters:
+- description: Web server image to use
+  displayName: Web Server
+  name: WEB_SERVER
+  value: nginx
