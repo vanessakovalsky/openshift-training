@@ -216,27 +216,24 @@ http://example-route-advanced.openshift.example.com (svc/example-svc)
   pod/example-pod runs nginx
 ```
 
-As you can see, we created the pod, fronted it with the service, and exposed it through the route in just a single command. Notice that you don't need to run the oc get route  command to find out what URL your application is accessible through—it all shows in the output.
+Comme vous pouvez le voir, nous avons créé le pod, il est connecté au service et exposé au travers de la route en une seule commande.
+ Noter que vous n'avez pas besoin de faire la commande oc get route pour obtenir l'URL de votre application, qui est accessible directement dans la sortie de la console.
 
-Let's see if our web server is reachable through curl:
-`curl -I example-route-default.[[HOST_SUBDOMAIN]]-80-[[KATACODA_HOST]].environments.katacoda.com`{{execute}}
+Voyons si le serveur web est accessible avec curl : 
+`curl -I [URL-DE-VOTRE-APPLICATION]`
 
 ```
 HTTP/1.1 200 OK
 Server: nginx/1.15.1
 ```
 
-Note
-We used the -I parameter of the curl command to see only response headers, which is enough to check the responsiveness of the server and ensure that it doesn't dump raw HTML into the console. Also, just as before, we used -H option to request a specific application from OpenShift's router.
+**Note**
+Nous utilisons le paramètre -I avec la commande curl pour voir seulement les entêtes de la réponse, ce qui suffit pour vérifier la réponse du serveur et s'assurer de ne pas afficher du HTML brut dans la console. 
 
-You can easily delete all of the resources and instantiate the template again, but this time with another web server image, such as Apache:
-`oc delete all --all`{{execute}}
+Vous pouvez facilement supprimer toutes les ressources et initiliser le template de nouveau, mais cette fois-ci en uutilisant une autre image de serveur web comme Apache :
+`oc delete all --all`
 
-
-## Déployer son template
-
-
-`oc new-app --template=example-template -p WEB_SERVER=httpd`{{execute}}
+`oc new-app --template=example-template -p WEB_SERVER=httpd`
 
 ```
 --> Deploying template "myproject/example-template" to project myproject
@@ -251,19 +248,18 @@ You chose to deploy httpd
     Run 'oc status' to view your app.
 ```
 
-`curl -I example-route-advanced.[[HOST_SUBDOMAIN]]-80-[[KATACODA_HOST]].environments.katacoda.com`{{execute}}
+`curl -I [URL-DE-VOTRE-APPLICATION]`
 
-## Rollback 
+## Créer un template à partir d'une ressource existante :  
 
-You can also perform a reverse operation—creating a template from existing resources. To do that, use the export command:
-`oc export all --as-template=exported-template > exported-template.yml`{{execute}}
+Vous pouvez aussi créer un template à partir de ressources existantes. Pour ça, utiliser la commande `export` : 
+`oc export all --as-template=exported-template > exported-template.yml`
 
-Let's delete our resources to prevent any conflicts:
-`oc delete all --all`{{execute}}
+Supprimons les ressources pour éviter les conflits : 
+`oc delete all --all`
 
-
-And recreate them from the exported template:
-`oc new-app -f exported-template.yml`{{execute}}
+Et les recréé depuis le template exporté : 
+`oc new-app -f exported-template.yml`
 
 ```
 --> Deploying template "advanced/exported-template" for "exported-template.yml" to project advanced
@@ -277,9 +273,9 @@ And recreate them from the exported template:
     Run 'oc status' to view your app.
 ```
 
-**Note:** You might have noticed that the web server was exposed through the same URL as before. This is because the exported template was created from already instantiated resources with all parameters resolved to values, so OpenShift has no way of knowing which fields were parameterized. You can also infer this from the output of the process command, which will show you that all the fields are already initialized. So, strictly speaking, this isn't a fully reverse operation, but it can be used for backups.
+**Note:** Vous avez peut être remarqué que le serveur web est exposé au travers de la même URL qu'auparavant. C'est parce que dans le template créé à partir de ressources existantes instancie les paramètres avec les valeurs existantes. OpenShift n'a pas de moyen de connaitre ce qui doit être mis en paramètre ou non dans le template. Vous pouvez le voir aussi avec la commande `process`.  
 
-Now that we are finished, let's do a clean-up:
-`oc delete all --all`{{execute}}
+Maintenant que nous avons terminé, faisons un peu de nettoyage : 
+`oc delete all --all`
 
-`oc delete template/example-template`{{execute}}
+`oc delete template/example-template`

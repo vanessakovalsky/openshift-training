@@ -5,7 +5,7 @@
 
 * Se connecter à un cluster OpenShift en ligne de commande
 * Créer un nouveau projet 
-* Récupérer l'archive assets_s2_builder.tar dans le dépôt git et décompresser là à l'endroit ou vous travailler.
+* Récupérer l'archive [assets_s2_builder.tar](https://github.com/vanessakovalsky/openshift-training/raw/master/assets_s2i_builder.tar) dans le dépôt git et décompresser là à l'endroit ou vous travailler.
 
 ## Découverte de S2I
 
