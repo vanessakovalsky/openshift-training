@@ -28,13 +28,12 @@
 
 * [Monitorer une application Spring](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-monitoring-springboot.md)
 
-* [Ci/CD avec Jenkins](https://www.middleware-solutions.fr/2017/05/09/integrationdeploiement-continue-sur-openshift/)
+* [Ci/CD avec Jenkins](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-jenkins.md)
 
 * [ CI/CD avec OpenShift Pipelines](https://learn.openshift.com/middleware/pipelines/)
 
 * [ Démarrer avec le Serverless](https://learn.openshift.com/developing-on-openshift/serverless/)
 
-* [Serverless - Déployer un service RabitMQ](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-add-service.md)
 
 ## OpenShift - Dev
 * [Premières manipulations d'OpenShift](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-premiers-pas.md): 
@@ -42,7 +41,7 @@
 * [Définir le routing](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-routing-istio.md) 
 * [Monitorer et tracer ces applications](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-monitoring.md)
 * [Ajouter du stockage persistant (Elastic)](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-persistent-storage.md) 
-* [Déployer un service RabitMQ](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-add-service.md) 
+
 
 
 
@@ -58,4 +57,4 @@ Pour aller plus loin :
 *[Déployer Prometheus et Grafana](https://learn.openshift.com/introduction/deploy-prometheus-grafana/)
 * [Déployer une application à l'aide de template](https://www.katacoda.com/ernesto/courses/learn-openshift/openshift-deploying-applications-using-templates)
 
-*
+* [Déployer un service RabitMQ](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-add-service.md) 
