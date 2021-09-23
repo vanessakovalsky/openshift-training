@@ -7,7 +7,7 @@
 
 ## Pré-requis
 
-* Cloner le dépôt : 
+* Cloner le dépôt : https://github.com/siamaksade/openshift-jenkins-demo.git 
 * Se connecter au cluster OpenShift
 * Executer les commande suivante en remplacant USER par votre nom : 
 ```
