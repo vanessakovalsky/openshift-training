@@ -55,9 +55,9 @@ Une autre façon de créer un flux d'image est d'utiliser la commande new-app qu
 Cela crée plusieurs ressources, l'une d'elle est un flux d'image.
 
 Si vous regarder la configuration du déploiement de l'application nouvellement crée, pas l'image en elle-même :
-`oc describe dc/lighttpd`
+`oc describe deployment lighttpd`
 
-Dans l'exemple précédente, les références de DeploymentConfig à une image de serveur dans le flux d'image selon le schéma suivant :
+Dans l'exemple précédente, les références de Deployment à une image de serveur dans le flux d'image selon le schéma suivant :
 
 ```
 gists/lighttpd: Image stream name
