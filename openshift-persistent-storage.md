@@ -14,19 +14,23 @@ Vous êtes connecté en tant qu'utilisateur admin, verifiez le avec la commande 
 
 Le contenu des fichiers à récupéré est ici : https://github.com/mulbc/learn-katacoda/tree/master/persistence/persistent-elasticsearch/assets 
 
+Pour obtenir la liste des classes de stockages disponibles
+```
+oc get sc
+```
+Modifier dans les fichier yaml la storageclass par une de celle disponible dans votre environnement.
+
 Créer un nouveau projet, qui sera utiliser tout le long de l'exercice et créer un PersistenVolumeClaim sur la classe de stockage OCS qui sera utiliser par le pod Elasticsearch pour persister les données.
 ```
 oc create -f 1_create_ns_ocs_pvc.yaml
 
 oc project e-library
 ```
-Pour vérifier la Storage Class (SC) et le PersistentVolumClaim (PVC)
+Pour vérifier le PersistentVolumClaim (PVC)
 ```
 oc get pvc
-
-oc get sc
 ```
-Avec quelques lignes de YAML, vous avez créer un PVC nommé ocs-pv-claom sur une classe de stockage ocs-storagecluster-ceph-rbd qui est fournit par OpenShift Container Storage. Elasticsearch a besoin de persistance pour ces données et OCS est une des options les plus simples et fiable que vous pouvez choisir pour persister les données pour vos applications fonctionnant sur OpenShift Container Platform.
+Avec quelques lignes de YAML, vous avez créer un PVC nommé ocs-pv-cliom sur une classe de stockage qui est fournit par OpenShift Container Storage. Elasticsearch a besoin de persistance pour ces données et OCS est une des options les plus simples et fiable que vous pouvez choisir pour persister les données pour vos applications fonctionnant sur OpenShift Container Platform.
 Continuons avec le déploiement du cluster Elasticsearch
 
 # Deployer Elasticsearch sur OCS
