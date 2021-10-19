@@ -177,7 +177,7 @@ oc create configmap blog-settings --from-file=blog.json
 Puis montée dans le conteneur en utilisant : 
 
 ```
-oc set volume deployement blog --add --name settings --mount-path /opt/app-root/src/settings --configmap-name blog-settings -t configmap
+oc set volume deployment blog-from-source-py --add --name settings --mount-path /opt/app-root/src/settings --configmap-name blog-settings -t configmap
 ```
 
 Même si un config map est utilisé, les variables d'environnements définies pour les mêmes paramètres prendront le dessus et seront appliquées.
