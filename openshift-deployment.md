@@ -28,6 +28,8 @@ oc new-app openshiftkatacoda/blog-django-py --name blog-from-image
 oc expose svc/blog-from-image
 ```
 
+En cas d'erreur sur l'image docker, vous pouvez utiliser celle-ci : public.ecr.aws/s6z9z6k1/vanessa-ecr 
+
 Vérifier ce qui s'affiche une fois le déploiement l'application terminée
 
 ## Construire depuis le code source
