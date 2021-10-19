@@ -45,7 +45,7 @@ Comme montré ci-dessus, and le cas le plus simple, le processus de construction
 
 Lorsque l'image de l'application en résultant est initialiser, le script _run_ exécute la commande _cat_ pour afficher le contenu de tout le "code source" stocker dans l'image.
 
-## Structure d'une image de construiction S2I. 
+## Structure d'une image de construction S2I. 
 
 + _assemble_ script - ce script est exécuté pendant le process de build de S2I et sait comment construire l'applciation depuis le code source. 
 + _run_ script - ce script est exécuté au lancement de l'application. 
@@ -70,7 +70,7 @@ cp -Rf /tmp/src/* /tmp/myapp
 Voici basiquement comment notre application simple - basée sur "cat" - est construite!
 
 
-## Créer une constructin d'image S2I
+## Créer une construction d'image S2I
 
 Une construction d'image S2I peut être créer depuis n'importe quel image Docker standard.
 Le Dockerfile dans le dossier _builder_ créer une construction d'image S2I basée sur une image Centos. 
