@@ -12,6 +12,8 @@ Dans cet exercice vous apprendrez à créer des Volumes Persistants et à l'util
 # Créer le projet et le PVC
 Vous êtes connecté en tant qu'utilisateur admin, verifiez le avec la commande whoami.
 
+Le contenu des fichiers à récupéré est ici : https://github.com/mulbc/learn-katacoda/tree/master/persistence/persistent-elasticsearch/assets 
+
 Créer un nouveau projet, qui sera utiliser tout le long de l'exercice et créer un PersistenVolumeClaim sur la classe de stockage OCS qui sera utiliser par le pod Elasticsearch pour persister les données.
 ```
 oc create -f 1_create_ns_ocs_pvc.yaml
