@@ -78,7 +78,7 @@ oc new-app postgresql-persistent --name blog-database --param DATABASE_SERVICE_N
 Pour re-configurer l'application blog pour utiliser la base de donnée, il faut définir la variable d'environnement ``DATABASE_URL`` de l'applicaiton blog.
 
 ```
-oc set env dc/blog-from-source-py DATABASE_URL=postgresql://sampledb:sampledb@blog-database:5432/sampledb
+oc set env deployment blog-from-source-py DATABASE_URL=postgresql://sampledb:sampledb@blog-database:5432/sampledb
 ```
 
 Comme un service séparé est utilisé pour la base de donnée, il est nécessaire de configurer manuellement la base de donnée la première fois. Cela nécessite de se connecter dans le pod et de lancer le script ``setup``.
@@ -86,7 +86,7 @@ Comme un service séparé est utilisé pour la base de donnée, il est nécessai
 Pour lancer le script ``setup`` depuis la ligne de commande, utiliser les commandes suivantes :
 
 ```
-POD=`oc get pods --selector app=blog-from-source-py -o name`
+POD=`oc get pods --selector deployment=blog-from-source-py -o name`
 oc rsh $POD scripts/setup
 ```
 
@@ -147,7 +147,7 @@ Pour rendre plus facile la démonstration du déploiements bleu/vert ou a/b, il 
 Pour définir les variables d'environnement depuis la ligne de commande, vous pouvez exécuter les commandes suivantes : 
 
 ```
-oc set env dc/blog-from-source-py BLOG_BANNER_COLOR=blue
+oc set env deployment blog-from-source-py BLOG_BANNER_COLOR=blue
 ```
 
 Sous le titre de chaque page, le nom d'hôte pour le pod qui gère la requête est aussi affiché. Cela permet de voir que les différentes requêtes son tautomatiquement réparties entre les instances.
@@ -174,7 +174,7 @@ oc create configmap blog-settings --from-file=blog.json
 Puis montée dans le conteneur en utilisant : 
 
 ```
-oc set volume deployement/blog --add --name settings --mount-path /opt/app-root/src/settings --configmap-name blog-settings -t configmap
+oc set volume deployement blog --add --name settings --mount-path /opt/app-root/src/settings --configmap-name blog-settings -t configmap
 ```
 
 Même si un config map est utilisé, les variables d'environnements définies pour les mêmes paramètres prendront le dessus et seront appliquées.
