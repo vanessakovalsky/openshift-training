@@ -87,7 +87,7 @@ Pour lancer le script ``setup`` depuis la ligne de commande, utiliser les comman
 
 ```
 POD=`oc get pods --selector deployment=blog-from-source-py -o name`
-oc rsh $POD scripts/setup
+oc rsh $POD /opt/app-root/src/.s2i/action_hooks//setup
 ```
 
 Le script ``setup`` initialisera les tables de base de données et vous demanderez les détail du compte initial à paramétrer. (a vous de définir les informations de ce compte et de les noter).
@@ -121,16 +121,17 @@ Un volume persistant peut être utilisé pour stocker de manière persistante le
 Avant qu'un volume persistant soit ajouté, il est nécessaire de modifier la stratégie de déploiement pour l'application Blog en  ``Recreate`` au lieu de  ``Rolling``. Si cela n'est pas fait et qu'un volume persistant de type ``RWO`` est utilisé, les déploiements pourraient échouer en raison du fait que le volume ne peut être monté que sur un seule noeud de cluster en même temps.
 
 Pour modifier la stratégie de déploiement depuis la ligne de commande, vous pouvez exécuter les commandes suivantes :
+Une fois le fichier ouvert supprimer les lignes de la clé rolingUpdate puis dans la cle type, remplacer RollingUpdate par Recreate 
 
 ```
-oc patch dc/blog-from-source-py -p '{"spec":{"strategy":{"type":"Recreate"}}}'
+oc edit deployment blog-from-source-py 
 ```
 Lors du montage du volume persistant pour stocker les images, il devrait être monté sur l'application de blog dans ``/opt/app-root/src/media``.
 
 Pour ajouter un volume persistant depuis la ligne de commande, vous pouvez exécuter les commandes suivantes : 
 
 ```
-oc set volume dc/blog-from-source-py --add --name=blog-images -t pvc --claim-size=1G -m /opt/app-root/src/media
+oc set volume deployment blog-from-source-py --add --name=blog-images -t pvc --claim-size=1G -m /opt/app-root/src/media
 ```
 
 Lorsque les images sont attachées à un billet, elle n'apparaisse pas sur la page racine qui contient tous les billets, vous devez aller dans le billet pour les voir.
