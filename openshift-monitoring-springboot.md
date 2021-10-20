@@ -1,4 +1,4 @@
-# Monitorer une applicatino Springboot sur OpenShift
+# Monitorer une application Springboot sur OpenShift
 
 ## Objectifs : 
 
@@ -24,7 +24,7 @@ Lancer l'application en exécutant la commande suivante :
 
 ``mvn spring-boot:run``
 
-Once that's completed, click on the **Local Web Browser** tab and navigate to the Une fois que lancement est terminé, ouvrir l'application dans votre navigateur (http://[IP-LOCALE]:8080) et aller sur le endpoint `/fruits` .
+Une fois que lancement est terminé, ouvrir l'application dans votre navigateur (http://[IP-LOCALE]:8080) et aller sur le endpoint `/fruits` .
 
 Vous devriez voir une page HTML avec un message de bienvenu  `Success` qui ressemble à :
 
