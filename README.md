@@ -32,7 +32,7 @@
 
 * [ CI/CD avec OpenShift Pipelines](https://learn.openshift.com/middleware/pipelines/)
 
-* [ Démarrer avec le Serverless](https://learn.openshift.com/developing-on-openshift/serverless/)
+* [ Démarrer avec le Serverless](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-serveless.md)
 
 
 ## OpenShift - Dev
