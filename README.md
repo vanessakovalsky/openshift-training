@@ -30,7 +30,7 @@
 
 * [Ci/CD avec Jenkins](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-jenkins.md)
 
-* [ CI/CD avec OpenShift Pipelines](https://learn.openshift.com/middleware/pipelines/)
+* [ CI/CD avec OpenShift Pipelines](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-pipelines.md)
 
 * [ Démarrer avec le Serverless](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-serveless.md)
 
