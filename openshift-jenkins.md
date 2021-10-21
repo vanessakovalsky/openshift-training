@@ -11,15 +11,18 @@
 * Se connecter au cluster OpenShift
 * Executer les commande suivante en remplacant USER par votre nom : 
 ```
-./scripts/provision.sh --projet-suffix USER deploy
+./scripts/provision.sh --project-suffix USER deploy
 ```
 
 * A l'aide de la console web, aller voir l'ensemble des ressources créés dans le projet cicd-USER
 **Note** Le pod pour Sonarqube n'a pas démarré en raison d'un problème d'image. Ce n'est pas gênant, et nous permet de manipuler le Jenkinsfile.
 
 * Les informations de connexions des différents outils :
+
     Gogs: gogs/gogs
+    
     Nexus: admin/admin123
+    
     SonarQube: admin/admin
 
 
