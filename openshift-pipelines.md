@@ -360,7 +360,9 @@ Pour visualiser les `PipelineRun`, renez vous dans la section Pipelines de la  p
 * La vue Topology de la console web d'OpenShift vous aide à visualiser ce qui est déployer sur votre projet OpenShift.
 Le cercle bleu foncé qui entour le cercle dans l'interface signifie qu'un conteneur a démarré et a lancer l'application. En cliquant sur l'icone de fleche comme ci-dessous, vous pouvez ouvrir l'URL de l'_ui_ dans un nouvel onglet et voir l'application fonctionner.
 
+
 ![Web Console URL Icon](https://github.com/openshift-labs/learn-katacoda/tree/master/assets/middleware/pipelines/url-icon.png)
+
 
 ## Accéder à l'application via CLI
 
