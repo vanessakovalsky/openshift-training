@@ -46,7 +46,7 @@ Cela permet de récupérer une image sécurisée de Redis qui fonctionne sur Ope
 Commençons l'installation du graphique. Si le projet `helm-demo` n'existe pas, vous devez le créer avec :
 
 ```console
-oc create project helm-demo
+oc new-project helm-demo
 ```
 
 1. Installer l'appli avec le graphique Helm :
