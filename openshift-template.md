@@ -115,7 +115,7 @@ Nous allons maintenant créer notre propre template. Créer une nouvelle défini
 
 <pre class="file" data-filename="example-template.yml" data-target="replace">
 kind: Template
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 metadata:
   name: example-template
 labels:
