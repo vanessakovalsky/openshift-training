@@ -1,6 +1,6 @@
 # Premier pas avec OpenShift
 
-L'exercice de base en anglais et l'environnement sont dispos ici : https://www.katacoda.com/courses/openshift/introduction/getting-started
+Sandbox disponible chez RedHat (nécessite de se créer un compte) : [https://developers.redhat.com/developer-sandbox](https://developers.redhat.com/developer-sandbox)
 
 ## Objectif
 Apprendre à utiliser OpenShift Container Platform pour construire et déplouer une application avec un backend de données et un frontend web
