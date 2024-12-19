@@ -5,6 +5,8 @@
 ## Bases d'OpenShift :
 
 * [Premières manipulations d'OpenShift](https://github.com/vanessakovalsky/openshift-training/blob/master/exercice-1-openshift-premiers-pas.md): 
+* [Lab complet ROSA](https://www.rosaworkshop.io/ostoy/3-lab_overview/)
+* [Monitoring et Logging](https://ibm-cloud.github.io/openshift4-lab/#/part1-learn_openshift/ex-1-deploy)
 
 
 
@@ -52,10 +54,6 @@
 
 
 Pour aller plus loin :
-* [Lab complet ROSA](https://www.rosaworkshop.io/ostoy/3-lab_overview/)
 * [Comprendre les registres de conteneurs](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-registry.md)
-* [Monitoring et Logging](https://ibm-cloud.github.io/openshift4-lab/#/part1-learn_openshift/ex-1-deploy)
-
-*[Déployer Prometheus et Grafana](https://learn.openshift.com/introduction/deploy-prometheus-grafana/)
 
 * [Déployer un service RabitMQ](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-add-service.md) 
