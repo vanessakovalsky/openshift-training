@@ -1,6 +1,5 @@
 # Monitorer et tracer ses applications 
 
-Exercice original : https://www.katacoda.com/courses/openshift/servicemesh/3-monitoring-tracing 
 
 Cet exercice montre comment obtenir le monitoring par défaut avec Prometheus et Grafana.
 
