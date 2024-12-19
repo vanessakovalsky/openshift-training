@@ -28,7 +28,7 @@ Une fois que lancement est terminé, ouvrir l'application dans votre navigateur 
 
 Vous devriez voir une page HTML avec un message de bienvenu  `Success` qui ressemble à :
 
-![Success](https://github.com/openshift-labs/learn-katacoda/tree/master/assets/middleware/rhoar-monitoring/landingPage.png)
+![Success]([https://github.com/openshift-labs/learn-katacoda/tree/master/assets/middleware/rhoar-monitoring/landingPage.png](https://github.com/openshift-labs/learn-katacoda/blob/master/assets/middleware/rhoar-monitoring/landingPage.png?raw=true))
 
 Si vous voyez cette page, vous avez réusssi à démarrer l'application. Si ce n'est pas le cas, regarder les logs dans le terminales. Spring boot ajoute plusieurs couche d'aide pour récupérer les erreurs communes et affiche des messages d'aide utile dans la console.
 
