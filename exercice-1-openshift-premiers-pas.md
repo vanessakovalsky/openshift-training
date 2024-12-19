@@ -34,17 +34,10 @@ Le CLI est idéal dans les situations suivantes :
 Cet exercice, n'est pas dédi au CLI OpenSHift, mais il est important de connaitre les cas où il est préférable d'utiliser la ligne de commande. Pour aller plus loin vous pouvez suivre d'autres exercices. Ici nous ne faisons que nous connecter afin de comprendre comme le CLI fonctionne.
 
 ## Exercise: Se connecter avec le CLI
-Commençons par nous connecter. Entrer la commande suivante dans la console :
-```shell
-oc login
-```
-Lorsqu'on vous le demande entrer les informations suivantes pour le username et le password :
-```
-Username: developer
 
-Password: developer
-```
-Ensuite, pour vérifier si cela à fonctionner entrer : 
+* En cliquant sur votre nom en haut à droite, puis sur Copier la commande de connexion, vous récupérer la commande de connexion à la CLI (à utiliser en local si vous le souhaitez.
+* Vous pouvez également ouvrir le terminal depuis la console web, dans ce cas il n'est pas utile de vous connecter vous êtes déjà connecter à votre cluster;
+* Ensuite, pour vérifier si cela à fonctionner entrer : 
 ```shell
 oc whoami
 ```
