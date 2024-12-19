@@ -53,22 +53,16 @@ Cette commande doit retourner la réponse :
 developer
 ```
 Et c'est tout !
-Dans l'étape suivante, on créera un premier projet en utilisant la console web.
 
 # Etape 2 - Explorer la console web
 
 Cette section se concentre sur la console web.
 
 ## Exercise: Se connecter avec la console Web
-Pour commencer, appuyer sur l'onglet Console de l'écran. Cela ouvre la console web dans le navigateur.
-Vous devriez voir une fenêtre de Red Hat OpenShift Container Plateform s'ouvrir qui vous demande Username et Password
-Pour ce scénario, entre les informations suivantes :
-```
-Username: developer
-
-Password: developer
-```
+Ouvrir votre sandbox developpeur et vous connecter avec votre compte red hat.
+Vous arrivez alors sur la console web.
 Après vous être connecté à la console web, vous êtes sur la page des projets.
+
 
 ## Qu'est ce qu'un projet ? Pourquoi c'est important ?
 
@@ -80,19 +74,22 @@ Plus techniquement, c'est une visualisation d'un namespace Kubernetes basé sur 
 
 
 ## Exercise: Explorer les perpectives Administrator et Developer
+
 Regarder le menu de navigation situer à gauche. Lors de votre première connexion, vous êtes typiquement sur une perspective Administrator. Si vous n'êtes pas dans la perspective Administrator, cliquer sur le menu pour passer de Dévelopeur à Administrator ou l'inverse.
 
 Vous êtes maintenant dans la perspective Administrateur, où vous trouverez Operators, Workloads, Networking, Storage, Builds et menu d'administrations dans la barre de menu.
 
 Parcourez rapidement les options, en cliquant sur quelques menus vous verrez plus d'options.
 
-Maintenant, passez à la perspective Développeur. Vous passeerez la plupart du temps de cet exercice dans la perspective Développeur. La première chose que vous verrez à la vue par Topologie. Pour l'instant elle est vide, et liste différentes façons d'ajouter du contenu à votre projet. Une fois que votre application est déployée, elle apparaitra dans la vue Topologie
+Maintenant, passez à la perspective Développeur. Vous passerez la plupart du temps de cet exercice dans la perspective Développeur. La première chose que vous verrez à la vue par Topologie. Pour l'instant elle est vide, et liste différentes façons d'ajouter du contenu à votre projet. Une fois que votre application est déployée, elle apparaitra dans la vue Topologie
 
 # Etape 3 - Déployer une image Docker
+
 Dans cette section, vous allez déployer le composant front end d'une application appelée parksmap. Cette application web affiche une caerte interactive,
 qui sera utilisée pour afficher les localisations de parcs nationaux principaux partout dans le monde.
 
 ## Exercise: Déployer votre première image 
+
 La méthode la plus simple pour déployer une application sur OpenShift est de prendre une image de conteneur existante et de la lancer. Nous allons utiliser la console web d'OpenShift pour cela, assurez vous d'avoir la console web OpenShift ouverte avec la perspective Developper et d'être dans le projet appelé myproject.
 
 La console web d'OpenShift fournit de nombreuses options pour déployer une application dans un projet. Pour cette section, nous allons utiliser la méthode d'Image de Conteneur.
