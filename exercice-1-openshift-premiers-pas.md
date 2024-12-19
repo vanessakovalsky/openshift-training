@@ -159,7 +159,7 @@ Les services fournissent une abstraction interne et du load balancinf entre les 
 
 Le routeur par défaut d'OpenShift (HAProxy) utilise le header HTTP de la requête entrante pour déterminer ou diriger la connexion. Vous pouvez définir des sécurités, comme TLS, pour la Route. Si vous souhaitez que les services, et par extension les Pods, soient accessible au reste du monde, vous devez créer une Route.
 
-Comme expliqué plus tôt dans l'exercice, la méthode de deéploiement des Images de Conteneurs crée une Route par défaut. Comme nousa vons décochez cette option, nous allons créer la Route manuellement.
+Comme expliqué plus tôt dans l'exercice, la méthode de deéploiement des Images de Conteneurs crée une Route par défaut. Comme nous avons décochez cette option, nous allons créer la Route manuellement.
 
 ## Exercise: Création d'une Route
 Heureusement, créer une route est un process rapide standard. Commencer par aller à la perpective Administrator. Assurez vous que le project myproject est sélectionné dans la liste des projets. Puis, cliquer sur Networking, puis Routes dans le menu de gauche.
