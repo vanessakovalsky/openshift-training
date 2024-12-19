@@ -78,14 +78,6 @@ Pour regrouper, nous utilons les projets. La raison pour avoir un projet qui con
 
 Plus techniquement, c'est une visualisation d'un namespace Kubernetes basé sur le contrôle d'accès pour les développeurs.
 
-## Exercise: Créer un Projet
-Cliquer sur le bouton blue Create project
-
-Vous devriez voir une page pour créer votre premier projet dans la console web. Remplissez le champ nom avec myproject
-
-Le reste du formulaire est optionnel et à vous de choisir si vous voulez le remplir ou l'ignorez. Cliquuez sur Create pour continuer.
-
-Après que votre projet soit créé vous verrez quelques informations basiques sur votre projet.
 
 ## Exercise: Explorer les perpectives Administrator et Developer
 Regarder le menu de navigation situer à gauche. Lors de votre première connexion, vous êtes typiquement sur une perspective Administrator. Si vous n'êtes pas dans la perspective Administrator, cliquer sur le menu pour passer de Dévelopeur à Administrator ou l'inverse.
