@@ -3,7 +3,7 @@
 Sandbox disponible chez RedHat (nécessite de se créer un compte) : [https://developers.redhat.com/developer-sandbox](https://developers.redhat.com/developer-sandbox)
 
 ## Objectif
-Apprendre à utiliser OpenShift Container Platform pour construire et déplouer une application avec un backend de données et un frontend web
+Apprendre à utiliser OpenShift Container Platform pour construire et déployer une application avec un backend de données et un frontend web
 
 ## Concepts
 * OpenShift Web Console et Perspectives
