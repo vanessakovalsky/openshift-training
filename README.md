@@ -41,8 +41,6 @@
 
 ## OpenShift - Dev
 * [Transférer des fichiers dans et depuis les conteneurs](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-transfert-fichiers.md) 
-* [Définir le routing](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-routing-istio.md) 
-* [Monitorer et tracer ces applications](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-monitoring.md)
 * [Ajouter du stockage persistant (Elastic)](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-persistent-storage.md) 
 
 
@@ -58,3 +56,4 @@ Pour aller plus loin :
 * [JAVA - Déployer Springboot](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-springboot.md)
 * [Monitorer et tracer ces applications](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-monitoring.md)
 * [Monitorer une application Spring](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-monitoring-springboot.md)
+* [Définir le routing](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-routing-istio.md) 
