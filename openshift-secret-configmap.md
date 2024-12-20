@@ -8,7 +8,7 @@ Cet exercice a pour objectifs :
 Nous allons a présents travailler avec une application JS qui a besoin d'une clé d'API et d'une langue.
 Plutôt que de coder en dur ces informations sensibles, nous allons utiliser les secrets et configmaps mis à disposition par kubernetes.
 
-L'application est ici : [magnificent app](./secrets/secretapp.js)
+L'application est ici : [magnificent app](https://github.com/vanessakovalsky/kubernetes-training/blob/master/secrets/secretapp.js)
 
 ###  Secrets comme variables d'environnement 
 
