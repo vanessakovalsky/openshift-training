@@ -9,10 +9,12 @@ Red Hat® OpenShift® Container Storage est un stockage défini par logiciel pou
 Dans cet exercice vous apprendrez à créer des Volumes Persistants et à l'utiliser pour déployer Elasticsearch. Vous déployer une application de démo qui est une bibliothère de moteur de recherche parmi 100 romans classiques. Une fois l'applications déployée avec succès, vous pourrez rechercher n'importe quel mot dans les 100 romans classiques, la recherche et motorisée par Elasticsearch qui utilise un stockage persistant depuis OCS. L'architecture logique de l'application que vous allez déployer ressemble à ça : 
 ![Schema d'architecture](https://github.com/mulbc/learn-katacoda/raw/master/persistence/persistent-elasticsearch/architecture.png)
 
-# Créer le projet et le PVC
+# le PVC
 Vous êtes connecté en tant qu'utilisateur admin, verifiez le avec la commande whoami.
 
 Le contenu des fichiers à récupéré est ici : https://github.com/mulbc/learn-katacoda/tree/master/persistence/persistent-elasticsearch/assets 
+
+* /!\ Sur les sandbox, il n'est pas possible de créer de Namespace, il faudra supprimer la création de namespace, et modifier le namespace sur toutes les ressources pour correspondre à votre namespce (identique à votre nom d'utilisateur et de projet)
 
 Pour obtenir la liste des classes de stockages disponibles
 ```
