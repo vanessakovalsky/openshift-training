@@ -89,7 +89,6 @@ Les données injectés sont stockés dans des fragments Elasticsearch qui utilis
 Dès que les données sont injectées, Elasticsearch indexera et les rendra recherchable.
 
 Récupérer l'URL du frontend et ouvrez là dans un navigateur pour rechercher n'importe quel mot.
-URL http://frontend-e-library.2886795278-80-simba07.environments.katacoda.com
 ```
 oc get route frontend -n e-library
 ```
