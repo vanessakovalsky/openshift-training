@@ -8,7 +8,7 @@
 * [Lab complet ROSA](https://www.rosaworkshop.io/ostoy/3-lab_overview/)
 * [Monitoring et Logging](https://ibm-cloud.github.io/openshift4-lab/#/part1-learn_openshift/ex-1-deploy)
 * [Ajouter du stockage persistant (Elastic)](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-persistent-storage.md)
-
+* [Gestion des secrets et des configmaps](https://github.com/vanessakovalsky/openshift-training/blob/master/openshift-secret-configmap.md)
 
 
 
