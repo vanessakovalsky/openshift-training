@@ -2,6 +2,19 @@
 
 /!\ Les exercices sont en cours de modification / mises à jour pour la plupart 
 
+## Pré-requis : 
+
+* installer et configurer kubectl : https://kubernetes.io/fr/docs/tasks/tools/install-kubectl/
+* installer et configurer Openshift Cli : https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/cli_tools/openshift-cli-oc
+
+## Connexion au cluster
+
+* Se connecter sur la console web via l'URL et les informations de connexion données par votre formatrice
+* Cliquer sur votre nom en haut à droite pour récupérer la commande de connexion (une page va s'ouvrir)
+* Copier la commande oc login... et exécuter la dans votre terminal / invite de commande
+* Pour kubectl, identifiez le nom de votre contexte avec la commande `kubectl config view`
+* Définir le contexte kubectl avec la commande `kubectl config use-context nomdevotrecontexte`
+
 ## Bases d'OpenShift :
 
 * [Premières manipulations d'OpenShift](https://github.com/vanessakovalsky/openshift-training/blob/master/exercice-1-openshift-premiers-pas.md): 
