@@ -1,0 +1,117 @@
+# Deny all ingress and egress by default 
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: wordpress-deny-all
+  namespace: dev-wordpress-vanessa
+spec:
+  policyTypes:
+    - Ingress
+    - Egress
+
+---
+# Allow wordpress pods to connect to mysql pods on port 3306
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: wordpress-allow-mysql
+  namespace: dev-wordpress-vanessa
+spec:
+  podSelector:
+    matchLabels:
+      app: wordpress
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: mysql
+      ports:
+        - protocol: TCP
+          port: 3306
+
+---
+# Allow mysql pods to receive traffic from wordpress pods on port 3306
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: mysql-allow-wordpress
+  namespace: dev-wordpress-vanessa
+spec:
+  podSelector:
+    matchLabels:
+      app: mysql
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: wordpress
+      ports:
+        - protocol: TCP
+          port: 3306
+---
+# Allow external traffic to wordpress pods on port 80
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: wordpress-allow-external-http
+  namespace: dev-wordpress-vanessa
+spec:
+  podSelector:
+    matchLabels:
+      app: wordpress
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 80
+---
+# Allow wordpress pods to make DNS queries to the cluster DNS service
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-dns
+  namespace: dev-wordpress-vanessa
+spec:
+  podSelector:
+    matchLabels:
+      app: wordpress
+  policyTypes:
+    - Egress 
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: openshift-dns
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+---
+# Allow wordpress pods to access the internet (egress to any IP)
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: wordpress-allow-internet
+  namespace: dev-wordpress-vanessa
+spec:
+  podSelector:
+    matchLabels:
+      app: wordpress
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0 

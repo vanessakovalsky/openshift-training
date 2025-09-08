@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+  namespace: dev-wordpress-vanessa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      serviceAccountName: wp-sa
+      containers:
+        - name: wordpress
+          image: wordpress:6.8.2-php8.4-apache
+          ports:
+            - containerPort: 80
+              name: wordpress
+          env:
+            - name: WORDPRESS_DB_HOST
+              value: mysql-service
+            - name: WORDPRESS_DB_USER
+              value: root
+            - name: WORDPRESS_DB_NAME
+              value: mysql
+            - name: WORDPRESS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_ROOT_PASSWORD
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "yes"
+            - name: BITNAMI_DEBUG
+              value: "true"
+          volumeMounts:
+            - name: wordpress-data
+              mountPath: /var/www/html/
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+      volumes:
+        - name: wordpress-data
+          persistentVolumeClaim:
+            claimName: wordpress-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress-service
+  namespace: dev-wordpress-vanessa
+spec:
+  selector:
+    app: wordpress
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: wp-route
+  namespace: dev-wordpress-vanessa
+  annotations:
+    openshift.io/host.generated: 'true'
+spec:
+  path: /
+  to:
+    kind: Service
+    name: wordpress-service
+    weight: 100
+  port:
+    targetPort: http

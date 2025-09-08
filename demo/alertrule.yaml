@@ -1,0 +1,25 @@
+# PrometheusRule pour alertes sécurité
+apiVersion: monitoring.openshift.io/v1
+kind: AlertingRule
+metadata:
+  name: security-alerts
+  namespace: openshift-monitoring
+spec:
+  groups:
+  - name: security.rules
+    rules:
+    - alert: UnauthorizedPodCreation
+      expr: increase(apiserver_audit_total{verb="create",objectRef_resource="pods"}[5m]) > 10
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Pic de création de pods détecté"
+    
+    - alert: PrivilegedPodRunning
+      expr: kube_pod_container_status_running{container_security_context_privileged="true"} > 0
+      for: 0m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Pod privilégié détecté en cours d'exécution"
