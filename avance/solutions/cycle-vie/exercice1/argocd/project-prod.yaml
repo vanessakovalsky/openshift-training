@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: production
+  namespace: argocd
+spec:
+  description: Production environment project
+  sourceRepos:
+  - https://github.com/your-org/secure-app-config
+  destinations:
+  - namespace: secure-app-prod
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+  namespaceResourceWhitelist:
+  - group: ''
+    kind: Service
+  - group: ''
+    kind: ConfigMap
+  - group: ''
+    kind: ServiceAccount
+  - group: apps
+    kind: Deployment
+  - group: policy
+    kind: PodDisruptionBudget
+  roles:
+  - name: prod-admin
+    description: Production administrator
+    policies:
+    - p, proj:production:prod-admin, applications, sync, production/*, allow
+    - p, proj:production:prod-admin, applications, action/*, production/*, allow
+    groups:
+    - your-org:prod-admins

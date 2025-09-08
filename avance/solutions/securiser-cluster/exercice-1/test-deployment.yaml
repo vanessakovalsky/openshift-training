@@ -1,0 +1,22 @@
+# Fichier: test-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-app
+  namespace: dev-team-alpha
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: test-app
+  template:
+    metadata:
+      labels:
+        app: test-app
+    spec:
+      serviceAccountName: dev-alpha-sa
+      containers:
+      - name: nginx
+        image: nginx:1.20
+        ports:
+        - containerPort: 80

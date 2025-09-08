@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: secure-app-prod
+
+resources:
+  - ../../base
+  - namespace.yaml
+  - networkpolicy.yaml
+  - pdb.yaml
+
+patchesStrategicMerge:
+  - security-patch.yaml
+
+commonLabels:
+  environment: prod
+
+configMapGenerator:
+- name: secure-app-config
+  behavior: merge
+  literals:
+  - log.level=WARN
+  - monitoring.interval=10s
+  - security.audit=true

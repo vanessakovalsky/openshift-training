@@ -1,0 +1,23 @@
+# Fichier: dev-alpha-role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: dev-team-alpha
+  name: dev-alpha-role
+rules:
+# Permissions pour les Deployments
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch", "create", "update", "patch"]
+# Permissions pour les Services
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["get", "list", "watch", "create", "update", "patch"]
+# Permissions pour les ReplicaSets (nécessaires pour les Deployments)
+- apiGroups: ["apps"]
+  resources: ["replicasets"]
+  verbs: ["get", "list", "watch"]
+# Permissions pour les Pods (lecture seule pour debug)
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch"]

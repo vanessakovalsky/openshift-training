@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: secure-app
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+      - name: app
+        env:
+        - name: ENVIRONMENT
+          value: "development"
+        - name: DEBUG
+          value: "true"
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "100m"
+          limits:
+            memory: "64Mi"
+            cpu: "200m"

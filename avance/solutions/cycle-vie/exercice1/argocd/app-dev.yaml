@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: secure-app-dev
+  namespace: argocd
+  labels:
+    environment: dev
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/your-org/secure-app-config
+    targetRevision: HEAD
+    path: environments/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: secure-app-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true
+  revisionHistoryLimit: 3

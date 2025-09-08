@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: secure-app-dev
+  labels:
+    environment: dev
+    security-level: standard

@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: secure-app-pdb
+  namespace: secure-app-prod
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: secure-app

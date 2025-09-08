@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: secure-app-config
+data:
+  app.properties: |
+    log.level=INFO
+    security.enabled=true
+    monitoring.enabled=true
