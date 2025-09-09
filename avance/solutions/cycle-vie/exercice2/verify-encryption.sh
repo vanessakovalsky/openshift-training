@@ -60,20 +60,3 @@ for sc in $(oc get storageclass -o name | cut -d/ -f2); do
     echo "  Paramètres complets:"
     echo "$sc_yaml" | yq eval '.parameters // {}' - | sed 's/^/    /'
 done
-
-echo
-echo "=== Test de création d'un PVC pour vérifier ==="
-echo "Pour tester une StorageClass spécifique, utilisez :"
-echo "oc apply -f - <<EOF"
-echo "apiVersion: v1"
-echo "kind: PersistentVolumeClaim"
-echo "metadata:"
-echo "  name: test-encryption-pvc"
-echo "spec:"
-echo "  accessModes:"
-echo "    - ReadWriteOnce"
-echo "  resources:"
-echo "    requests:"
-echo "      storage: 1Gi"
-echo "  storageClassName: <nom-storageclass>"
-echo "EOF"

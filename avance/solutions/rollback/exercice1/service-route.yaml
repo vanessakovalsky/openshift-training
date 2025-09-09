@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-rolling-service
+  namespace: rolling-update-demo
+  labels:
+    app: webapp-rolling
+spec:
+  selector:
+    app: webapp-rolling
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  type: ClusterIP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: webapp-rolling-route
+  namespace: rolling-update-demo
+  labels:
+    app: webapp-rolling
+spec:
+  to:
+    kind: Service
+    name: webapp-rolling-service
+    weight: 100
+  port:
+    targetPort: 80
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

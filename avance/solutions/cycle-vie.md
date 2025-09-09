@@ -55,11 +55,8 @@ chmod +x security-validation.sh.sh
 
 ### Fichiers
 
-* dans le dossier exercice2/storage, vous avez les fichiers qui correspondent à la création d'une classe de stockage pour les 3 principaux provider cloud ainsi que les deux application (base de donnée et app cliente)
-* Appliquer le fichier de classe de stockage qui correspond à votre fournisseur cloud, exemple :
-```
-oc apply -f exercice2/storage/storageclass-gcp.yaml
-```
+* dans le dossier exercice2/storage, vous avez les fichiers les deux application (base de donnée et app cliente)
+
 * Puis créer le namespace et appliquer les déploiements
 ```
 oc create ns secure-storage
