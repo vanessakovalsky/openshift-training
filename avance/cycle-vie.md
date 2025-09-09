@@ -6,6 +6,5 @@
 
 ### Exercice 2 : Configuration de Stockage Sécurisé 
 
-1. Créer une StorageClass avec chiffrement
-2. Déployer une application utilisant ce stockage
-3. Vérifier le chiffrement des données
+1. Déployer une application utilisant la classe de stockage par défaut du cloud provider (toutes les données stockées chez un cloud provider sont chiffré)
+2. Vérifier le chiffrement des données
