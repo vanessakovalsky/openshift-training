@@ -1,0 +1,103 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: secure-database
+  namespace: secure-storage
+spec:
+  serviceName: secure-database
+  replicas: 1
+  selector:
+    matchLabels:
+      app: secure-database
+  template:
+    metadata:
+      labels:
+        app: secure-database
+    spec:
+      serviceAccountName: sa-secure-storage
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: postgresql
+        image: postgres:14-alpine
+        ports:
+        - containerPort: 5432
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false  # PostgreSQL a besoin d'écrire
+          runAsNonRoot: true
+          capabilities:
+            drop:
+            - ALL
+        env:
+        - name: POSTGRES_DB
+          value: "securedb"
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: password
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        volumeMounts:
+        - name: postgresql-data
+          mountPath: /var/lib/postgresql/data
+        - name: tmp-volume
+          mountPath: /tmp
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - $(POSTGRES_USER)
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - $(POSTGRES_USER)
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: tmp-volume
+        emptyDir: {}
+  volumeClaimTemplates:
+  - metadata:
+      name: postgresql-data
+      labels:
+        app: secure-database
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: encrypted-ssd
+      resources:
+        requests:
+          storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: secure-database
+  namespace: secure-storage
+spec:
+  selector:
+    app: secure-database
+  ports:
+  - port: 5432
+    targetPort: 5432
+  type: ClusterIP

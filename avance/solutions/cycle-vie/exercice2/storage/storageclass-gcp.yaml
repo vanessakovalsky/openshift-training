@@ -1,0 +1,14 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: encrypted-ssd
+  labels:
+    security-level: encrypted
+provisioner: pd.csi.storage.gke.io
+parameters:
+  type: pd-ssd
+  disk-encryption-key: "projects/PROJECT_ID/locations/LOCATION/keyRings/RING_NAME/cryptoKeys/KEY_NAME"
+  replication-type: regional-pd
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true  
+reclaimPolicy: Delete

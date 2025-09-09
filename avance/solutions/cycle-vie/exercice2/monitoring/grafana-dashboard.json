@@ -1,0 +1,73 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Stockage Sécurisé Kubernetes",
+    "tags": ["kubernetes", "storage", "security"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Utilisation du Stockage par PVC",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "(kubelet_volume_stats_used_bytes / kubelet_volume_stats_capacity_bytes) * 100",
+            "legendFormat": "{{ persistentvolumeclaim }} - {{ namespace }}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 70},
+                {"color": "red", "value": 85}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "Volumes Chiffrés vs Non-Chiffrés",
+        "type": "piechart",
+        "targets": [
+          {
+            "expr": "count by (encrypted) (kube_persistentvolume_info)",
+            "legendFormat": "{{ encrypted }}"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Performance IOPS par Volume",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "rate(container_fs_reads_total[5m]) + rate(container_fs_writes_total[5m])",
+            "legendFormat": "{{ device }} - {{ container }}"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Alertes Stockage Actives",
+        "type": "table",
+        "targets": [
+          {
+            "expr": "ALERTS{alertname=~\".*Storage.*|.*PVC.*\"}",
+            "format": "table"
+          }
+        ]
+      }
+    ],
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "refresh": "30s"
+  }
+}

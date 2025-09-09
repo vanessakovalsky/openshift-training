@@ -1,0 +1,29 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: storage-metrics
+  namespace: secure-storage
+spec:
+  selector:
+    matchLabels:
+      app: secure-database
+  endpoints:
+  - port: metrics
+    interval: 30s
+    path: /metrics
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: storage-metrics
+  namespace: secure-storage
+  labels:
+    app: secure-database
+spec:
+  selector:
+    app: secure-database
+  ports:
+  - name: metrics
+    port: 9187
+    targetPort: 9187
+  type: ClusterIP

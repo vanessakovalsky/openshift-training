@@ -8,5 +8,4 @@ resources:
   - serviceaccount.yaml
 
 commonLabels:
-  managed-by: argocd
   component: secure-app

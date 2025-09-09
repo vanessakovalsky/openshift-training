@@ -1,0 +1,53 @@
+apiVersion: monitoring.openshift.com/v1
+kind: PrometheusRule
+metadata:
+  name: storage-alerts
+  namespace: openshift-monitoring
+spec:
+  groups:
+  - name: storage.rules
+    rules:
+    - alert: PVCStorageUsageHigh
+      expr: |
+        (
+          kubelet_volume_stats_used_bytes / 
+          kubelet_volume_stats_capacity_bytes
+        ) * 100 > 85
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "PVC {{ $labels.persistentvolumeclaim }} utilise {{ $value }}% de l'espace"
+        description: "Le volume {{ $labels.persistentvolumeclaim }} dans le namespace {{ $labels.namespace }} utilise plus de 85% de l'espace disponible."
+    
+    - alert: PVCStorageUsageCritical
+      expr: |
+        (
+          kubelet_volume_stats_used_bytes / 
+          kubelet_volume_stats_capacity_bytes
+        ) * 100 > 95
+      for: 2m
+      labels:
+        severity: critical
+      annotations:
+        summary: "PVC {{ $labels.persistentvolumeclaim }} utilise {{ $value }}% de l'espace"
+        description: "Le volume {{ $labels.persistentvolumeclaim }} dans le namespace {{ $labels.namespace }} utilise plus de 95% de l'espace disponible. Action immédiate requise."
+    
+    - alert: PVCEncryptionNotVerified
+      expr: |
+        up{job="storage-encryption-check"} == 0
+      for: 10m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Vérification du chiffrement des volumes échouée"
+        description: "La vérification du chiffrement des volumes persistants a échoué depuis plus de 10 minutes."
+    
+    - alert: StorageClassEncryptionDisabled
+      expr: |
+        kube_storageclass_info{encrypted="false"} == 1
+      labels:
+        severity: warning
+      annotations:
+        summary: "StorageClass {{ $labels.storageclass }} n'est pas chiffrée"
+        description: "La StorageClass {{ $labels.storageclass }} n'a pas le chiffrement activé."
