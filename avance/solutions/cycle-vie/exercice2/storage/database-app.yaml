@@ -84,7 +84,6 @@ spec:
         app: secure-database
     spec:
       accessModes: ["ReadWriteOnce"]
-      storageClassName: encrypted-ssd
       resources:
         requests:
           storage: 10Gi

@@ -63,8 +63,7 @@ metadata:
   namespace: secure-storage
 spec:
   accessModes:
-  - ReadWriteMany
-  storageClassName: encrypted-ssd
+  - ReadWriteOncePod
   resources:
     requests:
       storage: 5Gi
