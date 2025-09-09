@@ -6,7 +6,6 @@
 - Comprendre l'architecture et les concepts d'ACM
 - Déployer des applications sur plusieurs clusters
 - Utiliser les politiques de gouvernance multi-cluster
-- Monitorer la santé des clusters managés
 
 ## Prérequis
 
@@ -98,15 +97,6 @@ metadata:
 spec:
   type: Git
   pathname: https://github.com/stolostron/application-samples.git
-  secretRef:
-    name: git-secret
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: git-secret
-  namespace: acm-applications
-type: Opaque
 EOF
 ```
 
@@ -301,64 +291,7 @@ oc get policy policy-networkpolicy-required -n acm-policies -o yaml
 oc describe policy policy-pod-security-standards -n acm-policies
 ```
 
-## Partie 5 : Monitoring et observabilité (20 min)
 
-### Étape 1 : Explorer les métriques ACM
-
-```bash
-# Vérifier les services de monitoring ACM
-oc get svc -n open-cluster-management | grep metrics
-
-# Voir les pods de monitoring
-oc get pods -n open-cluster-management | grep -E "(metrics|observability)"
-
-# Accéder aux métriques Prometheus ACM
-oc get route -n open-cluster-management | grep grafana
-```
-
-### Étape 2 : Créer un tableau de bord custom
-
-```bash
-cat << EOF | oc apply -f -
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: acm-dashboard
-  namespace: open-cluster-management
-  labels:
-    grafana_dashboard: "true"
-data:
-  acm-overview.json: |
-    {
-      "dashboard": {
-        "title": "ACM Cluster Overview",
-        "panels": [
-          {
-            "title": "Managed Clusters",
-            "type": "stat",
-            "targets": [{
-              "expr": "acm_managed_cluster_info"
-            }],
-            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
-          }
-        ]
-      }
-    }
-EOF
-```
-
-### Étape 3 : Vérifier la santé des clusters
-
-```bash
-# État de santé du hub
-oc get multiclusterhub -n open-cluster-management
-
-# État des clusters managés
-oc get managedcluster
-
-# Vérifier les conditions des clusters
-oc get managedcluster -o custom-columns="NAME:.metadata.name,AVAILABLE:.status.conditions[?(@.type=='ManagedClusterConditionAvailable')].status,JOINED:.status.conditions[?(@.type=='ManagedClusterJoined')].status"
-```
 
 ## Commandes de nettoyage
 
