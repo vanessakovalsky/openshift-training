@@ -1,7 +1,7 @@
 ### Exercice 1 : Déploiement Multi-Environnements 
 
 1. Créer une application avec des politiques de sécurité différentes pour dev/prod
-2. Configurer ArgoCD pour gérer le déploiement automatique
+2. Dans un script appliquer les deploiements pour les environnements de dev et de prod
 3. Valider les politiques de sécurité appliquées
 
 ### Exercice 2 : Configuration de Stockage Sécurisé 

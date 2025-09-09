@@ -35,23 +35,44 @@ validate_kustomize() {
     echo "✅ Configuration Kustomize validée"
 }
 
-# Déploiement via ArgoCD
-deploy_argocd() {
-    echo "📦 Déploiement via ArgoCD..."
+# Déploiement 
+deploy() {
+    echo "📦 Déploiement via kubectl apply..."
     
     if [ "$DRY_RUN" = "true" ]; then
         echo "🔍 Mode dry-run activé - affichage de la configuration:"
-        cat argocd/app-$ENVIRONMENT.yaml
+        cat /tmp/manifest-$ENVIRONMENT.yaml
         return
     fi
+
+    NAMESPACE="secure-app-$ENVIRONMENT"
+
+
+    # Création du NAMESPACE
+    if kubectl get namespace "$NAMESPACE" >/dev/null 2>&1; then
+        echo "Namespace '$NAMESPACE' already exists."
+    else
+    # Create namespace
+        oc apply -f environments/$ENVIRONMENT/namespace.yaml
+        echo "Namespace '$NAMESPACE' created."
+    fi
+
+    SERVICEACCOUNTNAME="secure-app-sa"
     
-    # Appliquer l'application ArgoCD
-    kubectl apply -f argocd/app-$ENVIRONMENT.yaml
+    # Ajout du compte de service 
+    if oc get sa $SERVICEACCOUNTNAME -n $NAMESPACE >/dev/null 2>&1; then
+        echo "ServiceAccount '$SERVICEACCOUNTNAME' already exists in namespace '$NAMESPACE'."
+    else
+        echo "Creating ServiceAccount '$SERVICEACCOUNTNAME' in namespace '$NAMESPACE'."
+        oc create sa $SERVICEACCOUNTNAME -n $NAMESPACE
+    fi
+    oc adm policy add-scc-to-user anyuid system:serviceaccount:$NAMESPACE:$SERVICEACCOUNTNAME
+
+    # Appliquer l'application 
+    kubectl apply -f /tmp/manifest-$ENVIRONMENT.yaml
     
-    # Synchroniser l'application
-    argocd app sync secure-app-$ENVIRONMENT --prune
     
-    echo "✅ Application déployée via ArgoCD"
+    echo "✅ Application déployée"
 }
 
 # Validation post-déploiement
@@ -65,7 +86,7 @@ validate_deployment() {
     NAMESPACE="secure-app-$ENVIRONMENT"
     
     # Attendre que les pods soient prêts
-    kubectl wait --for=condition=ready pod -l app=secure-app -n $NAMESPACE --timeout=300s
+    kubectl wait --for=condition=ready pod -l app=secure-app -n $NAMESPACE --timeout=60s
     
     # Vérifier les NetworkPolicies
     NP_COUNT=$(kubectl get networkpolicies -n $NAMESPACE --no-headers | wc -l)
@@ -74,8 +95,8 @@ validate_deployment() {
         exit 1
     fi
     
-    # Test de connectivité
-    kubectl run test-pod --image=busybox --rm -i --tty -n $NAMESPACE -- nslookup secure-app-service
+    # Test de connectivité @TODO : check why this don't work 
+    # kubectl run test-pod --image=busybox --rm -i --tty -n $NAMESPACE -- nslookup secure-app-service
     
     echo "✅ Validation post-déploiement réussie"
 }
@@ -84,7 +105,7 @@ validate_deployment() {
 main() {
     check_prerequisites
     validate_kustomize
-    deploy_argocd
+    deploy
     validate_deployment
     
     echo "🎉 Déploiement terminé avec succès pour l'environnement: $ENVIRONMENT"
