@@ -11,6 +11,8 @@ Découvrir comment déployer et interconnecter une application distribuée entre
 Vous disposez de deux clusters OpenShift distincts, situés dans des réseaux différents (Cluster A et Cluster B).
 Votre mission est de mettre en place Submariner pour permettre à une application **frontend** déployée sur le Cluster A de communiquer avec une **base de données** (ou API backend) hébergée sur le Cluster B.
 
+![solutions/095bbaa1-49db-496e-be7b-e4a3f1019c9c.png](Architecture qui sera déployée)
+
 ---
 
 ## Prérequis
