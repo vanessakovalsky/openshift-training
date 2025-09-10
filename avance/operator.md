@@ -99,7 +99,7 @@ spec:
   serviceAccountName: prometheus-demo
   serviceMonitorSelector:
     matchLabels:
-      prometheus: demo
+      team: monitoring
   resources:
     requests:
       memory: 400Mi
