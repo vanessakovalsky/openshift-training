@@ -276,6 +276,9 @@ EOF
 ### Étape 5 : Accéder à Grafana
 
 ```bash
+# Ajouter une route
+oc expose sv grafana-demo-service
+
 # Obtenir l'URL de Grafana
 oc get route -n monitoring-demo
 
@@ -283,7 +286,7 @@ oc get route -n monitoring-demo
 oc get svc -n monitoring-demo | grep grafana
 
 # Port-forward pour accéder localement (alternative)
-oc port-forward svc/grafana-service 3000:3000 -n monitoring-demo
+oc port-forward svc/grafana-demo-service 3000:3000 -n monitoring-demo
 ```
 
 ## Partie 5 : Création d'un Dashboard via CRD (20 min)
