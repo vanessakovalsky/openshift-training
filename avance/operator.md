@@ -56,7 +56,6 @@ oc project
 * Vérifier que vous êtes bien dans votre nouveau projet
 * Recherche Prometheus Operator
 * Installer le.
-* 
 
 ### Étape 4 : Vérifier l'installation
 
@@ -172,21 +171,10 @@ oc describe statefulset prometheus-prometheus-demo -n monitoring-demo
 
 ### Étape 1 : Installer l'opérateur Grafana
 
-```bash
-cat << EOF | oc apply -f -
-apiVersion: operators.coreos.com/v1alpha1
-kind: Subscription
-metadata:
-  name: grafana-operator
-  namespace: monitoring-demo
-spec:
-  channel: v4
-  name: grafana-operator
-  source: community-operators
-  sourceNamespace: openshift-marketplace
-  installPlanApproval: Automatic
-EOF
-```
+* Depuis la console web Openshift, allez dans Operators > OperatorHub
+* Vérifier que vous êtes bien dans votre nouveau projet
+* Recherche Grafana Operator
+* Installer le (avec les paramètres par défaut).
 
 ### Étape 2 : Vérifier l'installation et explorer les CRD
 
