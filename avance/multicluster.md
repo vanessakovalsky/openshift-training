@@ -52,7 +52,7 @@
 
 ```bash
 # Obtenir l'URL de la console ACM
-echo "URL Console ACM: https://$(oc get route multicloud-console -n open-cluster-management -o jsonpath='{.spec.host}')"
+echo "URL Console ACM: https://$(oc get route acm-cli-downloads -n open-cluster-management -o jsonpath='{.spec.host}')"
 
 # Obtenir les credentials (utiliser les mêmes que OpenShift)
 oc whoami
