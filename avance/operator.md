@@ -195,30 +195,51 @@ oc explain grafanadatasource
 
 ```bash
 cat << EOF | oc apply -f -
-apiVersion: integreatly.org/v1alpha1
+apiVersion: grafana.integreatly.org/v1beta1
 kind: Grafana
 metadata:
   name: grafana-demo
   namespace: monitoring-demo
+  labels:
+    dashboards: "grafana"
 spec:
-  ingress:
-    enabled: true
+  route:
+    spec:
+      port:
+        targetPort: grafana-http
+      to:
+        kind: Service
+        name: grafana-demo-service
+        weight: 100
+      wildcardPolicy: None
   config:
     auth:
-      disable_signout_menu: true
+      disable_signout_menu: "true"
     auth.anonymous:
-      enabled: true
+      enabled: "true"
     log:
       level: warn
       mode: console
     security:
       admin_password: secret
       admin_user: root
-  dashboardLabelSelector:
-    - matchExpressions:
-        - key: app
-          operator: In
-          values: ['grafana']
+  service:
+    ports:
+      - name: grafana-http
+        port: 3000
+        protocol: TCP
+        targetPort: 3000
+  deployment:
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: grafana
+      template:
+        spec:
+          containers:
+            - name: grafana
+              image: grafana/grafana:latest
 EOF
 ```
 
