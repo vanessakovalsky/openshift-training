@@ -367,7 +367,7 @@ spec:
           "type": "stat",
           "targets": [
             {
-              "expr": "up{job=\"prometheus\"}",
+              "expr": "up{}",
               "refId": "A",
               "legendFormat": "Prometheus"
             }
