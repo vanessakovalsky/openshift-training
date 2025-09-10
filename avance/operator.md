@@ -201,17 +201,9 @@ metadata:
   name: grafana-demo
   namespace: monitoring-demo
   labels:
+    app: grafana-demo
     dashboards: "grafana"
 spec:
-  route:
-    spec:
-      port:
-        targetPort: grafana-http
-      to:
-        kind: Service
-        name: grafana-demo-service
-        weight: 100
-      wildcardPolicy: None
   config:
     auth:
       disable_signout_menu: "true"
@@ -223,23 +215,35 @@ spec:
     security:
       admin_password: secret
       admin_user: root
+  deployment:
+    spec:
+      selector:
+        matchLabels:
+          app: grafana-demo
+      template:
+        metadata:
+          labels:
+            app: grafana-demo
+        spec:
+          containers:
+          - name: grafana
+            image: grafana/grafana:latest
+            ports:
+            - containerPort: 3000
+              name: grafana-http
+              protocol: TCP
   service:
-    ports:
+    metadata:
+      labels:
+        app: grafana-demo
+    spec:
+      ports:
       - name: grafana-http
         port: 3000
         protocol: TCP
-        targetPort: 3000
-  deployment:
-    spec:
-      replicas: 1
+        targetPort: grafana-http
       selector:
-        matchLabels:
-          app: grafana
-      template:
-        spec:
-          containers:
-            - name: grafana
-              image: grafana/grafana:latest
+        app: grafana-demo
 EOF
 ```
 
@@ -247,21 +251,25 @@ EOF
 
 ```bash
 cat << EOF | oc apply -f -
-apiVersion: integreatly.org/v1alpha1
-kind: GrafanaDataSource
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
 metadata:
   name: prometheus-datasource
   namespace: monitoring-demo
 spec:
-  grafana:
-    name: grafana-demo
-    namespace: monitoring-demo
-  datasources:
-    - name: Prometheus
-      type: prometheus
-      access: proxy
-      url: http://prometheus-operated:9090
-      isDefault: true
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  datasource:
+    access: proxy
+    database: prometheus
+    jsonData:
+      timeInterval: 5s
+      tlsSkipVerify: true
+    name: Prometheus
+    type: prometheus
+    url: http://prometheus-operated:9090
+    isDefault: true
 EOF
 ```
 
