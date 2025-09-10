@@ -294,22 +294,7 @@ oc port-forward svc/grafana-demo-service 3000:3000 -n monitoring-demo
 ### Créer un dashboard Grafana via CRD
 
 ```bash
-
-```
-
-## Partie 6 : Expérimentation et observation (15 min)
-
-### Exercices pratiques
-
-1. **Modifier la configuration Prometheus :**
-   ```bash
-   # Éditer l'instance Prometheus pour changer les ressources
-   oc edit prometheus prometheus-demo -n monitoring-demo
-   # Modifier spec.resources.requests.memory à 600Mi
-   ```
-
-2. **Observer la réaction de l'opérateur :**
-   ```bashcat << EOF | oc apply -f -
+cat << EOF | oc apply -f -
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:
@@ -406,6 +391,21 @@ spec:
       "version": 1
     }
 EOF
+```
+
+## Partie 6 : Expérimentation et observation (15 min)
+
+### Exercices pratiques
+
+1. **Modifier la configuration Prometheus :**
+   ```bash
+   # Éditer l'instance Prometheus pour changer les ressources
+   oc edit prometheus prometheus-demo -n monitoring-demo
+   # Modifier spec.resources.requests.memory à 600Mi
+   ```
+
+2. **Observer la réaction de l'opérateur :**
+   ```bash
    # Regarder les pods en temps réel
    oc get pods -w -n monitoring-demo
    
