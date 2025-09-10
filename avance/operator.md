@@ -147,6 +147,7 @@ subjects:
 EOF
 ```
 
+
 ### Étape 4 : Observer le comportement de l'opérateur
 
 ```bash
@@ -161,6 +162,51 @@ oc get statefulset -n monitoring-demo
 
 # Examiner les détails du StatefulSet
 oc describe statefulset prometheus-prometheus-demo -n monitoring-demo
+```
+
+### Etape 5 : créer les services monitor
+
+```
+cat << EOF | oc apply -f -
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-self
+  namespace: monitoring-demo
+  labels:
+    team: monitoring
+spec:
+  selector:
+    matchLabels:
+      prometheus: prometheus
+  endpoints:
+  - port: web
+    path: /metrics
+    interval: 30s
+EOF
+```
+
+```
+cat << EOF | oc apply -f -
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kubernetes-pods
+  namespace: monitoring-demo
+  labels:
+    team: monitoring
+spec:
+  selector:
+    matchLabels:
+      prometheus.io/scrape: "true"
+  endpoints:
+  - port: metrics
+    path: /metrics
+    interval: 30s
+  namespaceSelector:
+    matchNames:
+    - monitoring-demo
+EOF
 ```
 
 **Questions de réflexion :**
