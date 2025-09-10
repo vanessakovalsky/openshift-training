@@ -295,7 +295,7 @@ oc port-forward svc/grafana-demo-service 3000:3000 -n monitoring-demo
 
 ```bash
 cat << EOF | oc apply -f -
-apiVersion: integreatly.org/v1alpha1
+apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:
   name: prometheus-dashboard
@@ -303,37 +303,69 @@ metadata:
   labels:
     app: grafana
 spec:
-  grafana:
-    name: grafana-demo
-    namespace: monitoring-demo
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"  # Même sélecteur que pour la datasource
   json: |
     {
       "dashboard": {
+        "id": null,
         "title": "Prometheus Stats",
+        "tags": ["prometheus"],
+        "timezone": "browser",
         "panels": [
           {
+            "id": 1,
             "title": "Prometheus Up",
             "type": "stat",
             "targets": [
               {
-                "expr": "up{job=\"prometheus\"}"
+                "expr": "up{job=\"prometheus\"}",
+                "refId": "A"
               }
             ],
-            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+            "fieldConfig": {
+              "defaults": {
+                "mappings": [],
+                "thresholds": {
+                  "steps": [
+                    {"color": "red", "value": 0},
+                    {"color": "green", "value": 1}
+                  ]
+                }
+              }
+            }
           },
           {
+            "id": 2,
             "title": "Prometheus Targets",
-            "type": "graph",
+            "type": "timeseries",
             "targets": [
               {
-                "expr": "prometheus_sd_discovered_targets"
+                "expr": "prometheus_sd_discovered_targets",
+                "refId": "B"
               }
             ],
-            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+            "fieldConfig": {
+              "defaults": {
+                "custom": {
+                  "drawStyle": "line",
+                  "lineInterpolation": "linear",
+                  "barAlignment": 0,
+                  "lineWidth": 1,
+                  "fillOpacity": 10,
+                  "gradientMode": "none"
+                }
+              }
+            }
           }
         ],
         "time": {"from": "now-1h", "to": "now"},
-        "refresh": "5s"
+        "refresh": "5s",
+        "schemaVersion": 30,
+        "version": 1
       }
     }
 EOF
