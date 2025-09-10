@@ -48,19 +48,10 @@
 
 ## Partie 2 : Exploration de la console ACM 
 
-### Accéder à la console ACM
-
-```bash
-# Obtenir l'URL de la console ACM
-echo "URL Console ACM: https://$(oc get route acm-cli-downloads -n open-cluster-management -o jsonpath='{.spec.host}')"
-
-# Obtenir les credentials (utiliser les mêmes que OpenShift)
-oc whoami
-```
 
 ### Navigation dans l'interface
 
-1. **Accédez à la console ACM** via l'URL obtenue
+1. **Accédez à la console ACM** via le menu tous les clusters sur votre console Openshift
 2. **Explorez les sections :**
    - Overview : Vue d'ensemble des clusters
    - Clusters : Gestion des clusters
