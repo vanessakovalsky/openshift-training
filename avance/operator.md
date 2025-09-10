@@ -41,7 +41,7 @@ oc get packagemanifests -n openshift-marketplace | grep prometheus
 oc describe packagemanifest prometheus-operator -n openshift-marketplace
 ```
 
-### Étape 2 : Créer un projet dédié
+### Étape 2 : Créer un projet dédié (à adapter avec votre nom)
 
 ```bash
 # Créer le namespace de travail
@@ -52,23 +52,11 @@ oc project
 ```
 
 ### Étape 3 : Installer l'opérateur Prometheus
-
-```bash
-# Créer la subscription pour installer l'opérateur
-cat << EOF | oc apply -f -
-apiVersion: operators.coreos.com/v1alpha1
-kind: Subscription
-metadata:
-  name: prometheus-operator
-  namespace: monitoring-demo
-spec:
-  channel: beta
-  name: prometheus-operator
-  source: community-operators
-  sourceNamespace: openshift-marketplace
-  installPlanApproval: Automatic
-EOF
-```
+* Depuis la console web Openshift, allez dans Operators > OperatorHub
+* Vérifier que vous êtes bien dans votre nouveau projet
+* Recherche Prometheus Operator
+* Installer le.
+* 
 
 ### Étape 4 : Vérifier l'installation
 
