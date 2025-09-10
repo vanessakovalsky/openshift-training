@@ -294,81 +294,7 @@ oc port-forward svc/grafana-demo-service 3000:3000 -n monitoring-demo
 ### Créer un dashboard Grafana via CRD
 
 ```bash
-cat << EOF | oc apply -f -
-apiVersion: grafana.integreatly.org/v1beta1
-kind: GrafanaDashboard
-metadata:
-  name: prometheus-dashboard
-  namespace: monitoring-demo
-  labels:
-    app: grafana
-spec:
-  instanceSelector:
-    matchLabels:
-      dashboards: "grafana"  # Même sélecteur que pour la datasource
-  json: |
-    {
-      "dashboard": {
-        "id": null,
-        "title": "Prometheus Stats",
-        "tags": ["prometheus"],
-        "timezone": "browser",
-        "panels": [
-          {
-            "id": 1,
-            "title": "Prometheus Up",
-            "type": "stat",
-            "targets": [
-              {
-                "expr": "up{job=\"prometheus\"}",
-                "refId": "A"
-              }
-            ],
-            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
-            "fieldConfig": {
-              "defaults": {
-                "mappings": [],
-                "thresholds": {
-                  "steps": [
-                    {"color": "red", "value": 0},
-                    {"color": "green", "value": 1}
-                  ]
-                }
-              }
-            }
-          },
-          {
-            "id": 2,
-            "title": "Prometheus Targets",
-            "type": "timeseries",
-            "targets": [
-              {
-                "expr": "prometheus_sd_discovered_targets",
-                "refId": "B"
-              }
-            ],
-            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
-            "fieldConfig": {
-              "defaults": {
-                "custom": {
-                  "drawStyle": "line",
-                  "lineInterpolation": "linear",
-                  "barAlignment": 0,
-                  "lineWidth": 1,
-                  "fillOpacity": 10,
-                  "gradientMode": "none"
-                }
-              }
-            }
-          }
-        ],
-        "time": {"from": "now-1h", "to": "now"},
-        "refresh": "5s",
-        "schemaVersion": 30,
-        "version": 1
-      }
-    }
-EOF
+
 ```
 
 ## Partie 6 : Expérimentation et observation (15 min)
@@ -383,7 +309,103 @@ EOF
    ```
 
 2. **Observer la réaction de l'opérateur :**
-   ```bash
+   ```bashcat << EOF | oc apply -f -
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: prometheus-dashboard
+  namespace: monitoring-demo
+  labels:
+    app: grafana
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  json: |
+    {
+      "id": null,
+      "uid": "prometheus-stats",
+      "title": "Prometheus Statistics",
+      "tags": ["prometheus", "monitoring"],
+      "timezone": "browser",
+      "editable": true,
+      "panels": [
+        {
+          "id": 1,
+          "title": "Prometheus Up Status",
+          "type": "stat",
+          "targets": [
+            {
+              "expr": "up{job=\"prometheus\"}",
+              "refId": "A",
+              "legendFormat": "Prometheus"
+            }
+          ],
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 0
+          },
+          "fieldConfig": {
+            "defaults": {
+              "mappings": [
+                {
+                  "options": {
+                    "0": {"text": "DOWN"},
+                    "1": {"text": "UP"}
+                  },
+                  "type": "value"
+                }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {"color": "red", "value": 0},
+                  {"color": "green", "value": 1}
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": 2,
+          "title": "Prometheus Targets Discovered",
+          "type": "timeseries",
+          "targets": [
+            {
+              "expr": "prometheus_sd_discovered_targets",
+              "refId": "B",
+              "legendFormat": "Discovered Targets"
+            }
+          ],
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 0
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "drawStyle": "line",
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "fillOpacity": 10
+              }
+            }
+          }
+        }
+      ],
+      "time": {
+        "from": "now-1h",
+        "to": "now"
+      },
+      "refresh": "5s",
+      "schemaVersion": 30,
+      "version": 1
+    }
+EOF
    # Regarder les pods en temps réel
    oc get pods -w -n monitoring-demo
    
